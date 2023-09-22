@@ -14,36 +14,6 @@ import java.util.LinkedHashMap;
 
 public class MixWeb {
 
-    /*
-    "parses": [
-    {
-      "name": "聚合",
-      "type": 3,
-      "url": "Demo"
-    },
-    {
-      "name": "解析",
-      "type": 1,
-      "url": "https://192.168.10.88/jx.php?url=",
-      "ext": {
-        "flag": [
-          "qq",
-          "iqiyi",
-          "qiyi",
-          "爱奇艺",
-          "腾讯",
-          "letv",
-          "sohu",
-          "tudou",
-          "pptv",
-          "mgtv",
-          "wasu",
-          "bilibili"
-        ]
-      }
-     }]
-     */
-
     public static HashMap<String, ArrayList<String>> flagWebJx = new HashMap<>();
 
     static HashMap<String, ArrayList<String>> configs = null;
