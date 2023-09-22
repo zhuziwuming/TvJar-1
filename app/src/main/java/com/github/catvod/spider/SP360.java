@@ -65,7 +65,7 @@ public class SP360 extends Spider {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject vObj = jsonArray.getJSONObject(i);
                 JSONObject v = new JSONObject();
-                cover = vObj.getString("cover");
+                cover = vObj.getString("cdncover");
                 if (vObj.has("upinfo")) {
                     remark = vObj.getString("upinfo");
                     v.put("vod_id", tid + "_" + vObj.getString("id"));
