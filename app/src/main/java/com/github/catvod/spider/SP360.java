@@ -267,7 +267,7 @@ public class SP360 extends Spider {
         }
     }
 
-	public static void modifyResult(JSONObject result) {//寻找抖音索引
+	public static JSONObject modifyResult(JSONObject result){//寻找抖音索引
         JSONArray list = result.getJSONArray("list");
         for (int i = 0; i < list.length(); i++) {
             JSONObject item = list.getJSONObject(i);
