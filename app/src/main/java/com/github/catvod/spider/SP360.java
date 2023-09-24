@@ -10,6 +10,7 @@ import com.github.catvod.utils.okhttp.OkHttpUtil;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;//引入数组类
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -265,13 +266,7 @@ String[] fromArray = list.getString("vod_play_from").split("\\$\\$\\$");
 // 检查数组长度是否不等于1
 if (fromArray.length != 1) {
     // 查找"douyin"所在的索引并删除
-    // 创建一个新的列表
-    List<String> fromList = new ArrayList<>();
-    
-    // 将元素逐个添加到列表中
-    for (String item : fromArray) {
-        fromList.add(item);
-    }
+    List<String> fromList = new ArrayList<>(Arrays.asList(fromArray));
     int douyinIndex = fromList.indexOf("douyin");
     if (douyinIndex != -1) {
         fromList.remove(douyinIndex);
@@ -282,14 +277,7 @@ if (fromArray.length != 1) {
     // 分割vod_play_url的值成数组
     String[] urlArray = list.getString("vod_play_url").split("\\$\\$\\$");
     // 删除相同索引的值
-    List<String> urlList = new ArrayList<>();
-    
-    // 将元素逐个添加到列表中
-    for (String item : fromArray) {
-        urlList.add(item);
-    }
-	
-	
+    List<String> urlList = new ArrayList<>(Arrays.asList(urlArray));
     if (douyinIndex != -1 && douyinIndex < urlList.size()) {
         urlList.remove(douyinIndex);
     }
