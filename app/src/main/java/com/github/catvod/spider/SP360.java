@@ -258,49 +258,38 @@ public class SP360 extends Spider {
                 }
                 list.put(str7, TextUtils.join("$$$", videos));
             }
+		
 
-	result = modifyResult(result);//重新排列过滤抖音
+String[] fromArray = list.getString("vod_play_from").split("\\$\\$\\$");
+
+// 检查数组长度是否不等于1
+if (fromArray.length != 1) {
+    // 查找"douyin"所在的索引并删除
+    List<String> fromList = new ArrayList<>(Arrays.asList(fromArray));
+    int douyinIndex = fromList.indexOf("douyin");
+    if (douyinIndex != -1) {
+        fromList.remove(douyinIndex);
+    }
+    // 更新vod_play_from的值
+    list.put("vod_play_from", String.join("$$$", fromList));
+    
+    // 分割vod_play_url的值成数组
+    String[] urlArray = list.getString("vod_play_url").split("\\$\\$\\$");
+    // 删除相同索引的值
+    List<String> urlList = new ArrayList<>(Arrays.asList(urlArray));
+    if (douyinIndex != -1 && douyinIndex < urlList.size()) {
+        urlList.remove(douyinIndex);
+    }
+    // 更新vod_play_url的值
+    list.put("vod_play_url", String.join("$$$", urlList));
+}
+		
+	
             return result.toString();
         } catch (Exception e10) {
             SpiderDebug.log(e10);
             return "";
         }
-    }
-
-	public static JSONObject modifyResult(JSONObject result){//寻找抖音索引
-        JSONArray list = result.getJSONArray("list");
-        for (int i = 0; i < list.length(); i++) {
-            JSONObject item = list.getJSONObject(i);
-            String[] playFromArr = item.getString("vod_play_from").split("\\$\\$\\$");
-            String[] playUrlArr = item.getString("vod_play_url").split("\\$\\$\\$");
-
-            if (playFromArr.length > 1) { // 只有当playFromArr的长度大于1时才删除指定索引值
-                int douyinIndex = -1;
-                for (int j = 0; j < playFromArr.length; j++) {
-                    if ("douyin".equals(playFromArr[j])) {
-                        douyinIndex = j;
-                        break;
-                    }
-                }
-
-                if (douyinIndex != -1) {
-                    playFromArr = removeElement(playFromArr, douyinIndex);
-                    playUrlArr = removeElement(playUrlArr, douyinIndex);
-
-                    item.put("vod_play_from", String.join("$$$", playFromArr));
-                    item.put("vod_play_url", String.join("$$$", playUrlArr));
-                }
-            }
-        }
-    }
-
-    public static String[] removeElement(String[] original, int index) {//移除抖音对应索引值
-        String[] result = new String[original.length - 1];
-        System.arraycopy(original, 0, result, 0, index);
-        if (index < original.length - 1) {
-            System.arraycopy(original, index + 1, result, index, original.length - index - 1);
-        }
-        return result;
     }
 
     @Override
