@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DoubanDW extends Spider {
+public class Douban extends Spider {
     private final String hostURL = "https://frodo.douban.com/api/v2";
     private final String apikey = "0ac44ae016490db2204ce0a042db2916";
 
