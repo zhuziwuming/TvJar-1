@@ -1,7 +1,7 @@
 package com.github.catvod.spider;
 
 import com.github.catvod.crawler.Spider;
-import com.github.catvod.net.OkHttp;
+import com.github.catvod.utils.okhttp.OkHttpUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -89,7 +89,7 @@ public class Douban extends Spider {
             default: // 电影筛选
                 cateURL = hostURL + "/movie/recommend" + "?apikey=" + apikey + "&sort=" + sort + "&tags=" + tags + "&start=" + start + "&count=20";
         }
-        String jsonStr = OkHttp.string(cateURL, getHeader());
+        String jsonStr = OkHttpUtil.string(cateURL, getHeader());
         JSONObject jsonObject = new JSONObject(jsonStr);
         JSONArray items = jsonObject.getJSONArray(itemKey);
         JSONArray videos = new JSONArray();
