@@ -1,10 +1,7 @@
 package com.github.catvod.spider;
 
 import com.github.catvod.crawler.Spider;
-import com.github.catvod.utils.okhttp.SSLSocketFactoryCompat;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import com.github.catvod.utils.okhttp.OkHttpUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,7 +25,7 @@ public class Douban extends Spider {
     }
 
     @Override
-    public String homeContent(boolean filter) throws Exception {
+    public String homeContent(boolean filter){
         JSONArray classes = new JSONArray();
         List<String> typeIds = Arrays.asList("hot_gaia", "tv_hot", "show_hot", "movie", "tv", "rank_list_movie", "rank_list_tv");
         List<String> typeNames = Arrays.asList("热门电影", "热播剧集", "热播综艺", "电影筛选", "电视筛选", "电影榜单", "电视剧榜单");
@@ -49,11 +46,10 @@ public class Douban extends Spider {
     }
 
     @Override
-    public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend) throws Exception {
+    public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend){
         HashMap<String, String> ext = new HashMap<>();
         if (extend != null && extend.size() > 0) {
             ext.putAll(extend);
-
         }
         String sort = ext.get("sort") == null ? "T" : ext.get("sort");
         String tags = URLEncoder.encode(getTags(ext));
@@ -93,7 +89,7 @@ public class Douban extends Spider {
             default: // 电影筛选
                 cateURL = hostURL + "/movie/recommend" + "?apikey=" + apikey + "&sort=" + sort + "&tags=" + tags + "&start=" + start + "&count=20";
         }
-        String jsonStr = OkHttp.string(cateURL, getHeader());
+        String jsonStr = OkHttpUtil.string(cateURL, getHeader());
         JSONObject jsonObject = new JSONObject(jsonStr);
         JSONArray items = jsonObject.getJSONArray(itemKey);
         JSONArray videos = new JSONArray();
@@ -103,7 +99,7 @@ public class Douban extends Spider {
             String name = item.optString("title");
             String pic = getPic(item);
             String remark = getRating(item);
-            String vid = "msearch:" + id + "###" + name + "###" + pic;
+            String vid = id + "###" + name + "###" + pic;
             JSONObject vod = new JSONObject()
                     .put("vod_id", vid)
                     .put("vod_name", name)
@@ -115,27 +111,6 @@ public class Douban extends Spider {
                 .put("pagecount", 999)
                 .put("list", videos);
         return result.toString();
-    }
-
-    private String getWebContent(String targetURL, Map<String, String> header) throws Exception {
-        Request.Builder builder = new Request.Builder()
-                .url(targetURL)
-                .get();
-        for (String key : header.keySet()) {
-            String value = header.get(key);
-            builder.addHeader(key, value);
-        }
-        Request request = builder.build();
-        OkHttpClient okHttpClient = new OkHttpClient()
-                .newBuilder()
-                .sslSocketFactory(new SSLSocketFactoryCompat(), SSLSocketFactoryCompat.trustAllCert)
-                .hostnameVerifier((hostname, session) -> true)
-                .build();
-        Response response = okHttpClient.newCall(request).execute();
-        if (response.body() == null) return "";
-        String str = response.body().string();
-        response.close();
-        return str;
     }
 
     private String getRating(JSONObject item) {
@@ -166,8 +141,34 @@ public class Douban extends Spider {
             }
             return tags.substring(0, tags.lastIndexOf(","));
         } catch (Exception e) {
-            //e.printStackTrace();
+//            e.printStackTrace();
         }
         return "";
+    }
+
+
+    @Override
+    public String detailContent(List<String> ids){
+        String[] split = ids.get(0).split("###");
+        String name = split[1];
+        String pic = split[2];
+        String tips = "如果15秒内不能播放，请看其他片或进行搜索";
+        JSONObject vodInfo = new JSONObject()
+                .put("vod_id", ids.get(0))
+                .put("vod_name", name)
+                .put("vod_pic", pic)
+                .put("type_name", "")
+                .put("vod_year", "")
+                .put("vod_area", "")
+                .put("vod_remarks", "")
+                .put("vod_actor", tips)
+                .put("vod_director", tips)
+                .put("vod_content", tips);
+
+        JSONArray jsonArray = new JSONArray()
+                .put(vodInfo);
+        JSONObject result = new JSONObject()
+                .put("list", jsonArray);
+        return result.toString();
     }
 }
