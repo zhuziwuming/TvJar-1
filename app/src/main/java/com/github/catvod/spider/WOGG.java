@@ -69,10 +69,10 @@ public class WOGG extends Spider {
 		if(down_url.contains("$$$")){
 			down_url = down_url.split("$$$")[0];
 		}
-		if(down_url.contains("aliyundrive.com")){
+		//if(down_url.contains("aliyundrive.com")){
 			vObj.put("vod_id", "push://" + down_url);	
 		        vObj.put("vod_remarks", vod_remarks + "(VIP)");
-		}
+		//}
                 videos.put(vObj);					
             }
             dataObject.put("list", videos);		
@@ -163,10 +163,10 @@ public class WOGG extends Spider {
 		 if(down_url.contains("$$$")){
 		    down_url = down_url.split("$$$")[0];
 		 }
-		 if(down_url.contains("aliyundrive.com")){
+		 //if(down_url.contains("aliyundrive.com")){
 		    vObj.put("vod_id", "push://" + down_url);	
 		    vObj.put("vod_remarks", vod_remarks + "(VIP)");
-		 }
+		 //}
                  videos.put(vObj);		
            }
            dataObject.put("list", videos);        
