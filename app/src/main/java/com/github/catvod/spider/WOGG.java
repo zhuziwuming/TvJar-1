@@ -89,14 +89,13 @@ public class WOGG extends Spider {
 		try {
 		    if(!ids.contains("push://")){//不包含
 		        data = OkHttpUtil.string(url, Headers());
-		    }
 			dataObject = new JSONObject(data);
-			
+		    }	
 		}catch (Exception e10) {
             SpiderDebug.log(e10);
             return "";
         }
-		return dataObject.toString();
+	return dataObject.toString();
     }    
 	
     @Override
