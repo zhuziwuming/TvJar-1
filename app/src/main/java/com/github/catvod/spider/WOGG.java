@@ -22,8 +22,9 @@ import java.lang.String;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.widget.Toast;
   
-import javax.swing.JOptionPane; 
 
 public class WOGG extends Spider {
     protected JSONObject ext = null;
@@ -79,8 +80,7 @@ public class WOGG extends Spider {
             SpiderDebug.log(e);
             return "";
         }
-		JOptionPane.showMessageDialog(null, dataObject.toString()); 
-		return dataObject.toString();	
+	return dataObject.toString();	
     }
 
     @Override
