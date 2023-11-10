@@ -46,6 +46,7 @@ public class WOGG extends Spider {
 
     @Override
     public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend) {
+		JSONObject dataObject = null;
         try {
             String url = api + "?t=" + tid + "&pg=" + pg;
             Set<String> keys = extend.keySet();
@@ -56,7 +57,7 @@ public class WOGG extends Spider {
                 url += "&" + key + "=" + URLEncoder.encode(val);
             }
             String data = OkHttpUtil.string(url, Headers());
-            JSONObject dataObject = new JSONObject(data);
+            dataObject = new JSONObject(data);
             JSONArray jsonArray = dataObject.getJSONArray("list");
             JSONArray videos = new JSONArray();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -82,14 +83,14 @@ public class WOGG extends Spider {
 
     @Override
     public String detailContent(List<String> ids) {
-		String url;
+		String url = api + "&ids=" + ids;
+		JSONObject dataObject = null;
 		String data;
 		try {
 		    if(!ids.contains("push://")){//不包含
-		        url = api + "&ids=" + ids;
 		        data = OkHttpUtil.string(url, Headers());
 		    }
-			JSONObject dataObject = new JSONObject(data);
+			dataObject = new JSONObject(data);
 			
 		}catch (Exception e10) {
             SpiderDebug.log(e10);
@@ -116,9 +117,11 @@ public class WOGG extends Spider {
     public String homeVideoContent() {
         JSONObject list = new JSONObject();
 		String url = api;
+		String data;
+		JSONObject dataObject = null;
         try {
-            String data = OkHttpUtil.string(url, Headers());
-            JSONObject dataObject = new JSONObject(data);
+            data = OkHttpUtil.string(url, Headers());
+            dataObject = new JSONObject(data);
 			
         } catch (Exception e2) {
             SpiderDebug.log(e2);
@@ -144,9 +147,11 @@ public class WOGG extends Spider {
     @Override
     public String searchContent(String wd, boolean filter) {
 		String url = api+ "&wd=" + wd;
+		String data;
+		JSONObject dataObject = null;
 		try {
-		    String data = OkHttpUtil.string(url, Headers());
-		    JSONObject dataObject = new JSONObject(data);
+		    data = OkHttpUtil.string(url, Headers());
+		    dataObject = new JSONObject(data);
                 JSONArray jsonArray = dataObject.getJSONArray("list");
                 JSONArray videos = new JSONArray();
                 for (int i = 0; i < jsonArray.length(); i++) {
