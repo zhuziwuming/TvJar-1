@@ -173,7 +173,7 @@ public class WOGG extends Spider {
             SpiderDebug.log(e);
             return "";
         }
-		Toast.makeText(mContext, dataObject.toString(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, dataObject.toString(), Toast.LENGTH_SHORT).show();
         return dataObject.toString();
     }
 }
