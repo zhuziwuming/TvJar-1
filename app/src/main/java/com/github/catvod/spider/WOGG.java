@@ -164,7 +164,7 @@ public class WOGG extends Spider {
 		    	            down_url = down_url.split("$$$")[0];
 		                }
 						vObj.put("vod_id", "push://" + down_url);	
-		            	vObj.put("vod_remarks", vod_remarks + "(VIP)");
+		            	vObj.put("vod_remarks", "push://" + down_url);
                     videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中					
                 }
            dataObject.put("list", videos);        
