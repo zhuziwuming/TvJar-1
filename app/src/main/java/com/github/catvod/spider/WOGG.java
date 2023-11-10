@@ -83,11 +83,19 @@ public class WOGG extends Spider {
 
     @Override
     public String detailContent(List<String> ids) {
-	String url = api + "&ids=" + ids.get(0);
-	String 	data = OkHttpUtil.string(url, Headers());
-		JSONObject dataObject = new JSONObject(data);
+		String url = api + "&ids=" + ids.get(0);
+		JSONObject dataObject = null;
+		String data ="";
+		try {
+		        data = OkHttpUtil.string(url, Headers());
+				dataObject = new JSONObject(data);		
+		}catch (Exception e10) {
+            SpiderDebug.log(e10);
+			data = "{\"vod_id\":45900,\"vod_class\":\"国产,短剧\",\"vod_pic\":\"https://svip.picffzy.com/upload/vod/20221109-1/8467fa4e3d52edb4a223221e4c420679.jpg\",\"vod_blurb\":\"本片讲述了美食主播意外穿越来到唐朝，凭借自己超越朝代的特色厨技，携手隐藏身份的帮派少主以及流落街头的富家公子，在一起开办了风靡长安的酒楼后，共同品尝生活滋味并实现美好爱情的故事。\",\"vod_content\":\"本片讲述了美食\",\"vod_play_url\":\"https://res11.bignox.com/player/www/101ae5b183a03384c8005e2a827bc4fc/GDCHDGCCHrh8FpZ.mp4\",\"type_name\":\"短剧\"}";
+            return data;
+        }
 		return dataObject.toString();
-    } 
+    }
 	
     @Override
     public String homeContent(boolean filter) {
