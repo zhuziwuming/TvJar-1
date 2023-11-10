@@ -83,21 +83,11 @@ public class WOGG extends Spider {
 
     @Override
     public String detailContent(List<String> ids) {
-		String url = api + "&ids=" + ids.get(0);	    
-		JSONObject dataObject = null;
-		String data ="";
-	    data = OkHttpUtil.string(url, Headers());
-		try {
-		    //if(!ids.contains("push://")){//不包含
-		        data = OkHttpUtil.string(url, Headers());
-				dataObject = new JSONObject(data);
-		   // }		
-		}catch (Exception e10) {
-            SpiderDebug.log(e10);
-            return "";
-        }
+	String url = api + "&ids=" + ids.get(0);
+	String 	data = OkHttpUtil.string(url, Headers());
+		JSONObject dataObject = new JSONObject(data);
 		return dataObject.toString();
-    }    
+    } 
 	
     @Override
     public String homeContent(boolean filter) {
@@ -112,6 +102,7 @@ public class WOGG extends Spider {
         }
         return results.toString();
     }
+	
 
     @Override
     public String homeVideoContent() {
