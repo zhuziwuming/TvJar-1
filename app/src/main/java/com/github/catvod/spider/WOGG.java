@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.lang.String;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,7 +63,7 @@ public class WOGG extends Spider {
 				JSONObject vObj = jsonArray.getJSONObject(i);
 				    String down_url = vObj.getString("vod_down_url");
 					if(down_url.contains("$$$")){
-			            down_url = split("$$$",down_url)[0];
+			            down_url = down_url.split("$$$")[0];
 		            }
 				if(down_url.contains("aliyundrive.com")){
 		        	vObj["vod_id"] = "push://" + down_url;
@@ -111,6 +112,7 @@ public class WOGG extends Spider {
     @Override
     public String homeVideoContent() {
         JSONObject list = new JSONObject();
+		url = api;
         try {
             String data = OkHttpUtil.string(url, Headers());
             JSONObject dataObject = new JSONObject(data);
@@ -148,7 +150,7 @@ public class WOGG extends Spider {
 		    		JSONObject vObj = jsonArray.getJSONObject(i);
 		    		    String down_url = vObj.getString("vod_down_url");
 		    			if(down_url.contains("$$$")){
-		    	            down_url = split("$$$",down_url)[0];
+		    	            down_url = down_url.split("$$$")[0];
 		                }
 		    		if(down_url.contains("aliyundrive.com")){
 		            	vObj["vod_id"] = "push://" + down_url;
