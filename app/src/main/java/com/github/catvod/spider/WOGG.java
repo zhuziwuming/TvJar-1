@@ -22,8 +22,7 @@ import java.lang.String;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-  
-import android.widget.Toast; 
+
 
 public class WOGG extends Spider {
     protected JSONObject ext = null;
@@ -85,8 +84,10 @@ public class WOGG extends Spider {
     @Override
     public String detailContent(List<String> ids) {
 		String url = api + "&ids=" + ids;
+	    
 		JSONObject dataObject = null;
 		String data ="";
+	    data = OkHttpUtil.string(url, Headers());
 		try {
 		    if(!ids.contains("push://")){//不包含
 		        data = OkHttpUtil.string(url, Headers());
@@ -172,7 +173,6 @@ public class WOGG extends Spider {
             SpiderDebug.log(e);
             return "";
         }
-		Toast.makeText(getContext(), dataObject.toString(), Toast.LENGTH_SHORT).show();
         return dataObject.toString();
     }
 }
