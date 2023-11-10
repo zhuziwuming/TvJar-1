@@ -83,14 +83,14 @@ public class WOGG extends Spider {
 
     @Override
     public String detailContent(List<String> ids) {
-		String url = api + "&ids=" + ids;
+		String url = api + "&ids=" + ids.get(0);
 	    
 		JSONObject dataObject = null;
 		String data ="";
 	    data = OkHttpUtil.string(url, Headers());
 		try {
 		    if(!ids.contains("push://")){//不包含
-		        data = OkHttpUtil.string(url, Headers());
+		        //data = OkHttpUtil.string(url, Headers());
 				dataObject = new JSONObject(data);
 		    }		
 		}catch (Exception e10) {
