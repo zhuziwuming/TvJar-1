@@ -63,8 +63,8 @@ public class SP360 extends Spider {
 			            down_url = split("$$$",down_url)[0];
 		            }
 				if(down_url.contains("aliyundrive.com")){
-		        	jsonArray.getJSONObject(i)['vod_id'] = 'push://' + down_url;
-		        	jsonArray.getJSONObject(i)['vod_remarks'] = jsonArray.getJSONObject(i)['vod_remarks'].'(VIP)';
+		        	jsonArray.getJSONObject(i)["vod_id"] = "push://" + down_url;
+		        	jsonArray.getJSONObject(i)["vod_remarks"] = jsonArray.getJSONObject(i)["vod_remarks"]."(VIP)";
 		        }  
             }             		
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class SP360 extends Spider {
     public String detailContent(List<String> ids) {
 		try {
 		    if(!ids.contains("push://")){//不包含
-		        String url = api + '&ids=' + ids;
+		        String url = api + "&ids=" + ids;
 		        String data = OkHttpUtil.string(url, Headers());
 		    }
 			JSONObject dataObject = new JSONObject(data);
@@ -147,8 +147,8 @@ public class SP360 extends Spider {
 		    	            down_url = split("$$$",down_url)[0];
 		                }
 		    		if(down_url.contains("www.aliyundrive.com")){
-		            	jsonArray.getJSONObject(i)['vod_id'] = 'push://' + down_url;
-		            	jsonArray.getJSONObject(i)['vod_remarks'] = jsonArray.getJSONObject(i)['vod_remarks'].'(VIP)';
+		            	jsonArray.getJSONObject(i)["vod_id"] = "push://" + down_url;
+		            	jsonArray.getJSONObject(i)["vod_remarks"] = jsonArray.getJSONObject(i)["vod_remarks"]."(VIP)";
 		            }  
                 }                
 		} catch (Exception e) {
