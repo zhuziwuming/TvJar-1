@@ -156,6 +156,7 @@ public class WOGG extends Spider {
 	    dataObject = new JSONObject(data);
             JSONArray jsonArray = dataObject.getJSONArray("list");
             JSONArray videos = new JSONArray();
+	    String newId;
             for (int i = 0; i < jsonArray.length(); i++) {
 		    		JSONObject vObj = jsonArray.getJSONObject(i);
 		    		String down_url = vObj.getString("vod_down_url");
