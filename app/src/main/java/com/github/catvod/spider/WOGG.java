@@ -1,0 +1,160 @@
+package com.github.catvod.spider;
+
+import android.content.Context;
+import android.text.TextUtils;
+
+import com.github.catvod.crawler.Spider;
+import com.github.catvod.crawler.SpiderDebug;
+import com.github.catvod.utils.okhttp.OkHttpUtil;
+
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+public class SP360 extends Spider {
+    protected JSONObject ext = null;
+    private static final String api = "https://www.wogg.xyz/api.php/provide/vod/?ac=detail";
+    @Override
+    public void init(Context context) {
+        try {			
+            ext = new JSONObject("{\"1\":[{\"name\":\"地区\",\"value\":[{\"v\":\"\",\"n\":\"全部\"},{\"v\":\"大陆\",\"n\":\"大陆\"},{\"v\":\"香港\",\"n\":\"香港\"},{\"v\":\"韩国\",\"n\":\"韩国\"},{\"v\":\"美国\",\"n\":\"美国\"}],\"key\":\"area\"},{\"key\":\"year\",\"name\":\"年代\",\"value\":[{\"n\":\"全部\",\"v\":\"\"},{\"n\":\"2023\",\"v\":\"2023\"},{\"n\":\"2022\",\"v\":\"2022\"},{\"n\":\"2021\",\"v\":\"2021\"},{\"n\":\"2020\",\"v\":\"2020\"},{\"n\":\"2019\",\"v\":\"2019\"},{\"n\":\"2018\",\"v\":\"2018\"},{\"n\":\"2017\",\"v\":\"2017\"},{\"n\":\"2016\",\"v\":\"2016\"},{\"n\":\"2015\",\"v\":\"2015\"},{\"n\":\"90年代\",\"v\":\"1990~1999\"},{\"n\":\"更早\",\"v\":\"1800~1989\"}]}],\"2\":[{\"name\":\"地区\",\"value\":[{\"v\":\"\",\"n\":\"全部\"},{\"v\":\"大陆\",\"n\":\"大陆\"},{\"v\":\"香港\",\"n\":\"香港\"},{\"v\":\"韩国\",\"n\":\"韩国\"},{\"v\":\"美国\",\"n\":\"美国\"}],\"key\":\"area\"},{\"key\":\"year\",\"name\":\"年代\",\"value\":[{\"n\":\"全部\",\"v\":\"\"},{\"n\":\"2023\",\"v\":\"2023\"},{\"n\":\"2022\",\"v\":\"2022\"},{\"n\":\"2021\",\"v\":\"2021\"},{\"n\":\"2020\",\"v\":\"2020\"},{\"n\":\"2019\",\"v\":\"2019\"},{\"n\":\"2018\",\"v\":\"2018\"},{\"n\":\"2017\",\"v\":\"2017\"},{\"n\":\"2016\",\"v\":\"2016\"},{\"n\":\"2015\",\"v\":\"2015\"},{\"n\":\"90年代\",\"v\":\"1990~1999\"},{\"n\":\"更早\",\"v\":\"1800~1989\"}]}],\"3\":[{\"name\":\"地区\",\"value\":[{\"v\":\"\",\"n\":\"全部\"},{\"v\":\"大陆\",\"n\":\"大陆\"},{\"v\":\"香港\",\"n\":\"香港\"},{\"v\":\"韩国\",\"n\":\"韩国\"},{\"v\":\"美国\",\"n\":\"美国\"}],\"key\":\"area\"},{\"key\":\"year\",\"name\":\"年代\",\"value\":[{\"n\":\"全部\",\"v\":\"\"},{\"n\":\"2023\",\"v\":\"2023\"},{\"n\":\"2022\",\"v\":\"2022\"},{\"n\":\"2021\",\"v\":\"2021\"},{\"n\":\"2020\",\"v\":\"2020\"},{\"n\":\"2019\",\"v\":\"2019\"},{\"n\":\"2018\",\"v\":\"2018\"},{\"n\":\"2017\",\"v\":\"2017\"},{\"n\":\"2016\",\"v\":\"2016\"},{\"n\":\"2015\",\"v\":\"2015\"},{\"n\":\"90年代\",\"v\":\"1990~1999\"},{\"n\":\"更早\",\"v\":\"1800~1989\"}]}],\"4\":[{\"name\":\"地区\",\"value\":[{\"v\":\"\",\"n\":\"全部\"},{\"v\":\"大陆\",\"n\":\"大陆\"},{\"v\":\"香港\",\"n\":\"香港\"},{\"v\":\"韩国\",\"n\":\"韩国\"},{\"v\":\"美国\",\"n\":\"美国\"}],\"key\":\"area\"},{\"key\":\"year\",\"name\":\"年代\",\"value\":[{\"n\":\"全部\",\"v\":\"\"},{\"n\":\"2023\",\"v\":\"2023\"},{\"n\":\"2022\",\"v\":\"2022\"},{\"n\":\"2021\",\"v\":\"2021\"},{\"n\":\"2020\",\"v\":\"2020\"},{\"n\":\"2019\",\"v\":\"2019\"},{\"n\":\"2018\",\"v\":\"2018\"},{\"n\":\"2017\",\"v\":\"2017\"},{\"n\":\"2016\",\"v\":\"2016\"},{\"n\":\"2015\",\"v\":\"2015\"},{\"n\":\"90年代\",\"v\":\"1990~1999\"},{\"n\":\"更早\",\"v\":\"1800~1989\"}]}]}");
+        } catch (JSONException e) {
+            SpiderDebug.log(e);
+        }
+    }
+
+    protected HashMap<String, String> Headers() {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36");
+		headers.put("Referer","https://www.wogg.xyz/");		
+        return headers;
+    }
+
+    @Override
+    public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend) {
+        try {
+            String url = api + "?t=" + tid + "&pg=" + pg;
+            Set<String> keys = extend.keySet();
+            for (String key : keys) {
+                String val = extend.get(key).trim();
+                if (val.length() == 0)
+                    continue;
+                url += "&" + key + "=" + URLEncoder.encode(val);
+            }
+            String data = OkHttpUtil.string(url, Headers());
+            JSONObject dataObject = new JSONObject(data);
+            JSONArray jsonArray = dataObject.getJSONArray("list");
+            JSONArray videos = new JSONArray();
+            for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject vObj = jsonArray.getJSONObject(i);
+				    String down_url = vObj.getString("vod_down_url");
+					if(down_url.contains("$$$")){
+			            down_url = split("$$$",down_url)[0];
+		            }
+				if(down_url.contains("aliyundrive.com")){
+		        	jsonArray.getJSONObject(i)['vod_id'] = 'push://' + down_url;
+		        	jsonArray.getJSONObject(i)['vod_remarks'] = jsonArray.getJSONObject(i)['vod_remarks'].'(VIP)';
+		        }  
+            }             		
+        } catch (Exception e) {
+            SpiderDebug.log(e);
+            return "";
+        }
+		return dataObject.toString();	
+    }
+
+    @Override
+    public String detailContent(List<String> ids) {
+		try {
+		    if(!ids.contains("push://")){//不包含
+		        String url = api + '&ids=' + ids;
+		        String data = OkHttpUtil.string(url, Headers());
+		    }
+			JSONObject dataObject = new JSONObject(data);
+			
+		}catch (Exception e10) {
+            SpiderDebug.log(e10);
+            return "";
+        }
+		return dataObject.toString();
+    }    
+	
+    @Override
+    public String homeContent(boolean filter) {
+        JSONObject results = new JSONObject();
+        try {
+            results.put("class", ext.getJSONArray("classes"));
+            if (filter) {
+                results.put("filters", ext.getJSONObject("filter"));
+            }
+        } catch (JSONException e2) {
+            SpiderDebug.log(e2);
+        }
+        return results.toString();
+    }
+
+    @Override
+    public String homeVideoContent() {
+        JSONObject list = new JSONObject();
+        try {
+            String data = OkHttpUtil.string(url, Headers());
+            JSONObject dataObject = new JSONObject(data);
+			
+        } catch (Exception e2) {
+            SpiderDebug.log(e2);
+			return "";
+        }
+        return dataObject.toString();        
+    }
+
+    @Override
+    public String playerContent(String str, String str2, List<String> list) {
+        JSONObject result = new JSONObject();
+        try {
+            result.put("parse", 1);
+            result.put("url", str2);
+            result.put("jx", "1");
+            result.put("playUrl", "");
+        } catch (Exception e2) {
+            SpiderDebug.log(e2);
+        }
+        return result.toString();
+    }
+
+    @Override
+    public String searchContent(String wd, boolean filter) {
+		String url = api+ "&wd=".wd;
+		try {
+		    String data = OkHttpUtil.string(url, Headers());
+		    JSONObject dataObject = new JSONObject(data);
+                JSONArray jsonArray = dataObject.getJSONArray("list");
+                JSONArray videos = new JSONArray();
+                for (int i = 0; i < jsonArray.length(); i++) {
+		    		JSONObject vObj = jsonArray.getJSONObject(i);
+		    		    String down_url = vObj.getString("vod_down_url");
+		    			if(down_url.contains("$$$")){
+		    	            down_url = split("$$$",down_url)[0];
+		                }
+		    		if(down_url.contains("www.aliyundrive.com")){
+		            	jsonArray.getJSONObject(i)['vod_id'] = 'push://' + down_url;
+		            	jsonArray.getJSONObject(i)['vod_remarks'] = jsonArray.getJSONObject(i)['vod_remarks'].'(VIP)';
+		            }  
+                }                
+		} catch (Exception e) {
+            SpiderDebug.log(e);
+            return "";
+        }
+        return dataObject.toString();
+    }
+}
