@@ -26,7 +26,7 @@ import org.json.JSONObject;
 
 public class WOGG extends Spider {
     protected JSONObject ext = null;
-    private static final String api;
+    private static String api;
     @Override
     public void init(Context context, String extend) {
 	    super.init(context, extend);
