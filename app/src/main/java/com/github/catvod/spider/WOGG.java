@@ -22,7 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class SP360 extends Spider {
+public class WOGG extends Spider {
     protected JSONObject ext = null;
     private static final String api = "https://www.wogg.xyz/api.php/provide/vod/?ac=detail";
     @Override
