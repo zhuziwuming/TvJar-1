@@ -63,19 +63,19 @@ public class WOGG extends Spider {
             JSONArray jsonArray = dataObject.getJSONArray("list");
             JSONArray videos = new JSONArray();
             for (int i = 0; i < jsonArray.length(); i++) {
-				JSONObject vObj = jsonArray.getJSONObject(i);
-				    String down_url = vObj.getString("vod_down_url");
-					String vod_remarks = vObj.getString("vod_remarks");
-					if(down_url.contains("$$$")){
-			            down_url = down_url.split("$$$")[0];
-		            }
-				if(down_url.contains("aliyundrive.com")){
-					vObj.put("vod_id", "push://" + down_url);	
-		            vObj.put("vod_remarks", vod_remarks + "(VIP)");
-		        }
-                videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中						
+		JSONObject vObj = jsonArray.getJSONObject(i);
+		String down_url = vObj.getString("vod_down_url");
+		String vod_remarks = vObj.getString("vod_remarks");
+		if(down_url.contains("$$$")){
+			down_url = down_url.split("$$$")[0];
+		}
+		if(down_url.contains("aliyundrive.com")){
+			vObj.put("vod_id", "push://" + down_url);	
+		        vObj.put("vod_remarks", vod_remarks + "(VIP)");
+		}
+                videos.put(vObj);					
             }
-            dataObject.put("list", videos);  // 将新的 JSONArray 替换原有的 list			
+            dataObject.put("list", videos);		
         } catch (Exception e) {
             SpiderDebug.log(e);
             return "";
@@ -167,9 +167,9 @@ public class WOGG extends Spider {
 		    vObj.put("vod_id", "push://" + down_url);	
 		    vObj.put("vod_remarks", vod_remarks + "(VIP)");
 		 }
-                 videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中					
+                 videos.put(vObj);		
            }
-           dataObject.put("list", videos);  // 将新的 JSONArray 替换原有的 list                  
+           dataObject.put("list", videos);        
 	} catch (Exception e) {
             SpiderDebug.log(e);
             return "";
