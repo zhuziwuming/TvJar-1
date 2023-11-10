@@ -163,7 +163,7 @@ public class WOGG extends Spider {
 		                }
 		    		if(down_url.contains("aliyundrive.com")){
 						vObj.put("vod_id", "push://" + down_url);	
-		            	vObj.put("vod_remarks", vod_remarks + "(VIP)");
+		            	vObj.put("vod_remarks", vObj.get("vod_id"));
 		            }
                     videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中					
                 }
