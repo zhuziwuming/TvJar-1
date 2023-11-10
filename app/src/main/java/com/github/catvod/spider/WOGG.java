@@ -22,9 +22,8 @@ import java.lang.String;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.widget.Toast;
   
+import android.widget.Toast; 
 
 public class WOGG extends Spider {
     protected JSONObject ext = null;
@@ -80,7 +79,7 @@ public class WOGG extends Spider {
             SpiderDebug.log(e);
             return "";
         }
-	return dataObject.toString();	
+		return dataObject.toString();	
     }
 
     @Override
@@ -173,7 +172,7 @@ public class WOGG extends Spider {
             SpiderDebug.log(e);
             return "";
         }
-		Toast.makeText(this, dataObject.toString(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(getContext(), dataObject.toString(), Toast.LENGTH_SHORT).show();
         return dataObject.toString();
     }
 }
