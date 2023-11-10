@@ -16,10 +16,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.lang.String;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+  
 
 
 public class WOGG extends Spider {
@@ -63,10 +65,12 @@ public class WOGG extends Spider {
 			            down_url = split("$$$",down_url)[0];
 		            }
 				if(down_url.contains("aliyundrive.com")){
-		        	jsonArray.getJSONObject(i)["vod_id"] = "push://" + down_url;
-		        	jsonArray.getJSONObject(i)["vod_remarks"] = jsonArray.getJSONObject(i)["vod_remarks"] + "(VIP)";
-		        }  
-            }             		
+		        	vObj["vod_id"] = "push://" + down_url;
+		        	vObj["vod_remarks"] = vObj["vod_remarks"] + "(VIP)";
+		        }
+                videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中						
+            }
+            dataObject.put("list", videos);  // 将新的 JSONArray 替换原有的 list			
         } catch (Exception e) {
             SpiderDebug.log(e);
             return "";
@@ -147,10 +151,12 @@ public class WOGG extends Spider {
 		    	            down_url = split("$$$",down_url)[0];
 		                }
 		    		if(down_url.contains("aliyundrive.com")){
-		            	jsonArray.getJSONObject(i)["vod_id"] = "push://" + down_url;
-		            	jsonArray.getJSONObject(i)["vod_remarks"] = jsonArray.getJSONObject(i)["vod_remarks"] + "(VIP)";
-		            }  
-                }                
+		            	vObj["vod_id"] = "push://" + down_url;
+		            	vObj["vod_remarks"] = vObj["vod_remarks"] + "(VIP)";
+		            }
+                    videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中					
+                }
+            dataObject.put("list", videos);  // 将新的 JSONArray 替换原有的 list                  
 		} catch (Exception e) {
             SpiderDebug.log(e);
             return "";
