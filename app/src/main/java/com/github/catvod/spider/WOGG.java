@@ -48,8 +48,8 @@ public class WOGG extends Spider {
     public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend) {
 		JSONObject dataObject = null;
 		String data ="";
-        try {
-            String url = api + "?t=" + tid + "&pg=" + pg;
+		String url = api + "?t=" + tid + "&pg=" + pg;
+        try { 
             Set<String> keys = extend.keySet();
             for (String key : keys) {
                 String val = extend.get(key).trim();
