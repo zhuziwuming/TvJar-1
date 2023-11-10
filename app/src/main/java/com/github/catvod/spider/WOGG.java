@@ -156,19 +156,23 @@ public class WOGG extends Spider {
 	    dataObject = new JSONObject(data);
             JSONArray jsonArray = dataObject.getJSONArray("list");
             JSONArray videos = new JSONArray();
-            for (int i = 0; i < jsonArray.length(); i++) {
-		 JSONObject vObj = jsonArray.getJSONObject(i);
-		 String down_url = vObj.getString("vod_down_url");
-		 String vod_remarks = vObj.getString("vod_remarks");
-		 if(down_url.contains("$$$")){
-		    down_url = down_url.split("$$$")[0];
-		 }
-
-		    vObj.put("vod_id", "push://" + down_url);	
-		    vObj.put("vod_remarks", vod_remarks + "(VIP)");
-
-                 videos.put(vObj);		
-           }
+            for (int i = 0; i < jsonArray.length(); i++) {  
+    JSONObject vObj = jsonArray.getJSONObject(i);  
+    String down_url = vObj.getString("down_url");  
+    String vod_remarks = vObj.getString("vod_remarks");  
+    String newVodId;  
+  
+    // 根据 down_url 判断并设置 vod_id  
+    if (down_url.contains("$$$")) {  
+        newVodId = "push://" + down_url.split("$$$")[0];  
+    } else {  
+        newVodId = "push://" + down_url;  // 或者其他默认设置  
+    }  
+  
+    vObj.put("vod_id", newVodId);  
+    vObj.put("vod_remarks", vod_remarks + "(VIP)");  
+    videos.put(vObj);  
+} 
            dataObject.put("list", videos);        
 	} catch (Exception e) {
             SpiderDebug.log(e);
