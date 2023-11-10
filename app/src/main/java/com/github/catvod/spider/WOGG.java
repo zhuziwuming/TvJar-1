@@ -64,7 +64,7 @@ public class SP360 extends Spider {
 		            }
 				if(down_url.contains("aliyundrive.com")){
 		        	jsonArray.getJSONObject(i)["vod_id"] = "push://" + down_url;
-		        	jsonArray.getJSONObject(i)["vod_remarks"] = jsonArray.getJSONObject(i)["vod_remarks"]."(VIP)";
+		        	jsonArray.getJSONObject(i)["vod_remarks"] = jsonArray.getJSONObject(i)["vod_remarks"] + "(VIP)";
 		        }  
             }             		
         } catch (Exception e) {
@@ -134,7 +134,7 @@ public class SP360 extends Spider {
 
     @Override
     public String searchContent(String wd, boolean filter) {
-		String url = api+ "&wd=".wd;
+		String url = api+ "&wd=" + wd;
 		try {
 		    String data = OkHttpUtil.string(url, Headers());
 		    JSONObject dataObject = new JSONObject(data);
@@ -146,9 +146,9 @@ public class SP360 extends Spider {
 		    			if(down_url.contains("$$$")){
 		    	            down_url = split("$$$",down_url)[0];
 		                }
-		    		if(down_url.contains("www.aliyundrive.com")){
+		    		if(down_url.contains("aliyundrive.com")){
 		            	jsonArray.getJSONObject(i)["vod_id"] = "push://" + down_url;
-		            	jsonArray.getJSONObject(i)["vod_remarks"] = jsonArray.getJSONObject(i)["vod_remarks"]."(VIP)";
+		            	jsonArray.getJSONObject(i)["vod_remarks"] = jsonArray.getJSONObject(i)["vod_remarks"] + "(VIP)";
 		            }  
                 }                
 		} catch (Exception e) {
