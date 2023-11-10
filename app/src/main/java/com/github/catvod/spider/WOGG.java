@@ -156,7 +156,6 @@ public class WOGG extends Spider {
 	    dataObject = new JSONObject(data);
             JSONArray jsonArray = dataObject.getJSONArray("list");
             JSONArray videos = new JSONArray();
-	    String newId;
             for (int i = 0; i < jsonArray.length(); i++) {
 		    		JSONObject vObj = jsonArray.getJSONObject(i);
 		    		String down_url = vObj.getString("vod_down_url");
@@ -164,11 +163,8 @@ public class WOGG extends Spider {
 		    			if(down_url.contains("$$$")){
 		    	            down_url = down_url.split("$$$")[0];
 		                }
-		    		if(down_url.contains("aliyundrive")){
-						newId = "push://" + down_url;
-						vObj.put("vod_id", newId);	
+						vObj.put("vod_id", "push://" + down_url);	
 		            	vObj.put("vod_remarks", vod_remarks + "(VIP)");
-		            }
                     videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中					
                 }
            dataObject.put("list", videos);        
