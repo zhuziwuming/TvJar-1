@@ -163,7 +163,7 @@ public class madou extends Spider {
             for (int i = 0; i < urls.size(); i++) {  
                 JSONObject cla = new JSONObject();  
                 cla.put("type_id" ,urls.get(i));				
-                cla.put("type_name",names.get(i)+"#"+urls.get(i));  
+                cla.put("type_name",names.get(i));  
                 classList.put(cla);  
             }
             results.put("class", classList);			
