@@ -95,7 +95,7 @@ public class madou extends Spider {
                 cla.put("url", urls.get(i));    
                 cla.put("pic", pics.get(i));    
                 cla.put("remarks", remarks.get(i));    
-                list.add(cla);    
+                list.put(cla);    
             }
 			dataObject.put("list", list);
 		}catch (Exception e) {
