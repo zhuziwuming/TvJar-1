@@ -120,8 +120,8 @@ public class madou extends Spider {
 			JSONArray Array = new JSONArray();
 			// 创建一个新的列表来存储结果  
             JSONObject vod = new JSONObject();  
-            vod.put("vod_id", url);  
-            vod.put("vod_name", name); //标题  
+            vod.put("vod_id", "123");  
+            vod.put("vod_name", "标题 "); //标题  
             vod.put("vod_pic", "https://bpic.588ku.com/element_origin_min_pic/19/11/14/3ce5bc2a5e262e55aba3bb6ba3f1f321.jpg"); //图片  
             vod.put("type_name", "在线直播"); //类型  
             vod.put("vod_year", "2023"); //年代  
@@ -131,7 +131,7 @@ public class madou extends Spider {
             vod.put("vod_director", getRandomDirector()); //导演  
             vod.put("vod_content", "随便搞点什么吧"); //简介  
             vod.put("vod_play_from", "madou");  
-            vod.put("vod_play_url", "在线直播$"+api + url);
+            vod.put("vod_play_url", "在线直播$https://res11.bignox.com/player/www/101ae5b183a03384c8005e2a827bc4fc/GDCHDGCCHrh8FpZ.mp4"+url);
 			Array.put(vod);
         	dataObject.put("list", Array);		
 		}catch (Exception e10) {
