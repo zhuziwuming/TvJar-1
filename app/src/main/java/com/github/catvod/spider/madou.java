@@ -12,14 +12,16 @@ import java.net.URLEncoder;
 import java.net.URLConnection; 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
-import java.lang.String;
+import java.util.Random;
 import java.util.regex.Matcher;  
 import java.util.regex.Pattern;
+
+import java.lang.String;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -104,14 +106,14 @@ public class madou extends Spider {
 
     @Override
     public String detailContent(List<String> ids) {
-		
+		String id = ids.get(0);
 		JSONObject dataObject = null;
 		try {
-		    String name = ids.split("$$$")[0];  
+		    String name = id.split("$$$")[0];  
             if (name.contains("\\s+")){  
                 name = name.split("\\s+")[1];  
             }  
-            String url  = ids.split("$$$")[1];  
+            String url  = id.split("$$$")[1];  
               
             Map<String, Object> vod = new HashMap<>();  
             vod.put("vod_id", url);  
