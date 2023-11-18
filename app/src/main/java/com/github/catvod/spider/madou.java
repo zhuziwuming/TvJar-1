@@ -59,9 +59,9 @@ public class madou extends Spider {
             int end = html.indexOf("class=\"box\"", start + 11); //跳过第一个，寻找下面的box  
             //String string = html.substring(start, end + 11 - start);  
              String string = html;  
-            Pattern p1 = Pattern.compile("<a style=\\\"\\\" href=\\\"(.*?)\\\" title=\\\"(.*?)\\\">");  
-            Pattern p2 = Pattern.compile("data-original=\\\"(.*?)\\\"");  
-            Pattern p3 = Pattern.compile("<div class=\\\"duration\\\">(.*?)</div>"); 
+            Pattern p1 = Pattern.compile("<a style=\"\" href=\"(.*?)\" title=\"(.*?)\">");  
+            Pattern p2 = Pattern.compile("data-original=\"(.*?)\"");  
+            Pattern p3 = Pattern.compile("<div class=\"duration\">(.*?)</div>");
               
             Matcher m1 = p1.matcher(string);  
             Matcher m2 = p2.matcher(string);  
