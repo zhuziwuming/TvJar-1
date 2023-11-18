@@ -66,7 +66,7 @@ public class madou extends Spider {
             Matcher m1 = p1.matcher(string);  
             Matcher m2 = p2.matcher(string);  
             Matcher m3 = p3.matcher(string);  
-              
+ 
             ArrayList<String> names = new ArrayList<>();  
             ArrayList<String> urls = new ArrayList<>();  
             ArrayList<String> pics = new ArrayList<>();  
@@ -91,8 +91,8 @@ public class madou extends Spider {
             // 遍历数组 
             for (int i = 0; i < names.size(); i++) {    
                 JSONObject cla = new JSONObject();    
-                cla.put("name", names.get(i));    
-                cla.put("url", urls.get(i));    
+                cla.put("name", names.get(i) + urls.get(i));    
+                cla.put("url", names.get(i));    
                 cla.put("pic", pics.get(i));    
                 cla.put("remarks", remarks.get(i));    
                 list.put(cla);    
