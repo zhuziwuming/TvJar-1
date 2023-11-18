@@ -26,6 +26,8 @@ import java.lang.String;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.widget.Toast;
   
   
   
@@ -51,8 +53,8 @@ public class madou extends Spider {
 		JSONObject dataObject = null;
 		String html ="";
 		String url = api + "&t=" + tid + "&pg=" + pg;
-        try { 
-            
+		Toast.makeText(Context, "列表url：" + url, Toast.LENGTH_SHORT).show();
+        try {            
             html = OkHttpUtil.string(url, Headers());
 			int start = html.indexOf("class=\"box\"");  
             int end = html.indexOf("class=\"box\"", start + 11); //跳过第一个，寻找下面的box  
@@ -161,7 +163,8 @@ public class madou extends Spider {
             JSONArray classList = new JSONArray();  
             for (int i = 0; i < urls.size(); i++) {  
                 JSONObject cla = new JSONObject();  
-                cla.put("type_id" ,urls.get(i));  
+                cla.put("type_id" ,urls.get(i));
+Toast.makeText(Context, "匹配到id值：" + urls.get(i), Toast.LENGTH_SHORT).show();				
                 cla.put("type_name",names.get(i));  
                 classList.put(cla);  
             }
