@@ -59,9 +59,9 @@ public class madou extends Spider {
             int end = html.indexOf("class=\"box\"", start + 11); //跳过第一个，寻找下面的box  
             //String string = html.substring(start, end + 11 - start);  
              String string = html;  
-            Pattern p1 = Pattern.compile("<a style=\"\" href=\"(.*?)\" title=\"(.*?)\">");  
-            Pattern p2 = Pattern.compile("data-original=\"(.*?)\"");  
-            Pattern p3 = Pattern.compile("<div class=\"duration\">(.*?)</div>");
+            Pattern p1 = Pattern.compile("<a style\\=\\\"\\\" href=\\\"(.*?)\\\" title\\=\\\"(.*?)\\\">");  
+            Pattern p2 = Pattern.compile("data-original\\=\\\"(.*?)\\\"");  
+            Pattern p3 = Pattern.compile("<div class\\=\\\"duration\\\">(.*?)<\\/div>");
               
             Matcher m1 = p1.matcher(string);  
             Matcher m2 = p2.matcher(string);  
@@ -86,7 +86,7 @@ public class madou extends Spider {
             }
 			dataObject = new JSONObject();
 			// 创建一个新的列表来存储结果  
-            List<Map<String, Object>> list = new ArrayList<>();  
+            JSONArray list = new JSONArray();  
               
             // 遍历数组 
             for (int i = 0; i < names.size(); i++) {    
@@ -116,7 +116,9 @@ public class madou extends Spider {
             }  
             String url  = id.split("$$$")[1];  
               
-            Map<String, Object> vod = new HashMap<>();  
+            dataObject = new JSONObject();
+			// 创建一个新的列表来存储结果  
+            JSONArray vod = new JSONArray();  
             vod.put("vod_id", url);  
             vod.put("vod_name", name); //标题  
             vod.put("vod_pic", ""); //图片  
