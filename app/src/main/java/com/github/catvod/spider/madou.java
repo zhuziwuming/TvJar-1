@@ -53,7 +53,6 @@ public class madou extends Spider {
 		JSONObject dataObject = null;
 		String html ="";
 		String url = api + "&t=" + tid + "&pg=" + pg;
-		Toast.makeText(this, "列表url：" + url, Toast.LENGTH_SHORT).show();
         try {            
             html = OkHttpUtil.string(url, Headers());
 			int start = html.indexOf("class=\"box\"");  
@@ -163,9 +162,8 @@ public class madou extends Spider {
             JSONArray classList = new JSONArray();  
             for (int i = 0; i < urls.size(); i++) {  
                 JSONObject cla = new JSONObject();  
-                cla.put("type_id" ,urls.get(i));
-                Toast.makeText(HomeActivity, "匹配到id值：" + urls.get(i), Toast.LENGTH_SHORT).show();				
-                cla.put("type_name",names.get(i));  
+                cla.put("type_id" ,urls.get(i));				
+                cla.put("type_name",names.get(i)."#".urls.get(i));  
                 classList.put(cla);  
             }
             results.put("class", classList);			
