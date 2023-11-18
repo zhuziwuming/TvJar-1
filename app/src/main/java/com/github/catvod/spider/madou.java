@@ -158,12 +158,12 @@ public class madou extends Spider {
                 urls.add(m.group(1));  
                 names.add(m.group(3));  
             }    
-            ArrayList<String> classList = new ArrayList<>();  
+            JSONArray classList = new JSONArray();  
             for (int i = 0; i < urls.size(); i++) {  
-                Map<String, Object> cla = new HashMap<>();  
+                JSONObject cla = new JSONObject();  
                 cla.put("type_id" ,urls.get(i));  
                 cla.put("type_name",names.get(i));  
-                classList.add(cla);  
+                classList.put(cla);  
             }
             results.put("class", classList);			
         } catch (JSONException e2) {
