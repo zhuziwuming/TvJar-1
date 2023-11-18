@@ -57,7 +57,7 @@ public class madou extends Spider {
             html = OkHttpUtil.string(url, Headers());
 			int start = html.indexOf("class=\"box\"");  
             int end = html.indexOf("class=\"box\"", start + 11); //跳过第一个，寻找下面的box  
-            String string = html.substring(start, end + 11 - start);  
+            //String string = html.substring(start, end + 11 - start);  
              String string = html;  
             Pattern p1 = Pattern.compile("<a style\\=\\\"\" href\\=\\\"(.*?)\\\" title=\\\"(.*?)\\\">");  
             Pattern p2 = Pattern.compile("data-original\\=\\\"(.*?)\\\"");  
