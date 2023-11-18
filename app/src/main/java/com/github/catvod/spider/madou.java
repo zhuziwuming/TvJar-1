@@ -106,11 +106,11 @@ public class madou extends Spider {
 		String url = api + "&ids=" + ids.get(0);
 		JSONObject dataObject = null;
 		try {
-		    String name = explode('$$$', $ids)[0];  
+		    String name = explode("$$$", $ids)[0];  
             if (name.contains(" ")){  
-                name = explode(' ', name)[1];  
+                name = explode(" ", name)[1];  
             }  
-            String url = explode('$$$', $ids)[1];  
+            String url = explode("$$$", $ids)[1];  
               
             Map<String, Object> vod = new HashMap<>();  
             vod.put("vod_id", url);  
