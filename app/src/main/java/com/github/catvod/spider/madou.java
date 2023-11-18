@@ -108,8 +108,8 @@ public class madou extends Spider {
 		JSONObject dataObject = null;
 		try {
 		    String name = ids.split("$$$")[0];  
-            if (name.contains(" ")){  
-                name = name.split(" ",)[1];  
+            if (name.contains("\\s+")){  
+                name = name.split("\\s+")[1];  
             }  
             String url  = ids.split("$$$")[1];  
               
