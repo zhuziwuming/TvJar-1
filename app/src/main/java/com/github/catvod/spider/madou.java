@@ -111,9 +111,9 @@ public class madou extends Spider {
 		JSONObject dataObject = null;
 		try {
 		    String name = id.split("$$$")[0];  
-            if (name.contains("\\s+")){  
-                name = name.split("\\s+")[1];  
-            }  
+            //if (name.contains("\\s+")){  
+                //name = name.split("\\s+")[1];  
+            //}  
             String url  = id.split("$$$")[1];  
               
             dataObject = new JSONObject();
@@ -122,8 +122,8 @@ public class madou extends Spider {
             JSONObject vod = new JSONObject();  
             vod.put("vod_id", url);  
             vod.put("vod_name", name); //标题  
-            vod.put("vod_pic", ""); //图片  
-            vod.put("type_name", "未知"); //类型  
+            vod.put("vod_pic", "https://bpic.588ku.com/element_origin_min_pic/19/11/14/3ce5bc2a5e262e55aba3bb6ba3f1f321.jpg"); //图片  
+            vod.put("type_name", "在线直播"); //类型  
             vod.put("vod_year", "2023"); //年代  
             vod.put("vod_area", ""); //地区  
             vod.put("vod_remarks", "");  
@@ -131,7 +131,7 @@ public class madou extends Spider {
             vod.put("vod_director", getRandomDirector()); //导演  
             vod.put("vod_content", "随便搞点什么吧"); //简介  
             vod.put("vod_play_from", "madou");  
-            vod.put("vod_play_url", api + url);
+            vod.put("vod_play_url", "在线直播$"+api + url);
 			Array.put(vod);
         	dataObject.put("list", Array);		
 		}catch (Exception e10) {
