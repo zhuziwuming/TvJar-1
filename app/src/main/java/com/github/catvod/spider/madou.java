@@ -52,7 +52,7 @@ public class madou extends Spider {
     public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend) {
 		JSONObject dataObject = null;
 		String html ="";
-		String url = api + "&t=" + tid + "&pg=" + pg;
+		String url = api + tid;
         try {            
             html = OkHttpUtil.string(url, Headers());
 			int start = html.indexOf("class=\"box\"");  
