@@ -61,7 +61,7 @@ public class madou extends Spider {
              String string = html;  
             Pattern p1 = Pattern.compile("<a style=\\\"\\\" href=\\\"(.*?)\\\" title=\\\"(.*?)\\\">");  
             Pattern p2 = Pattern.compile("data-original=\\\"(.*?)\\\"");  
-            Pattern p3 = Pattern.compile("<div class=\\\"duration\\\">(.*?)<\\\/div>"); 
+            Pattern p3 = Pattern.compile("<div class=\\\"duration\\\">(.*?)</div>"); 
               
             Matcher m1 = p1.matcher(string);  
             Matcher m2 = p2.matcher(string);  
