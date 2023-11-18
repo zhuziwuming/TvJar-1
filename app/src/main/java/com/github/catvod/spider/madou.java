@@ -160,10 +160,10 @@ public class madou extends Spider {
             for (int i = 0; i < urls.size(); i++) {  
                 Map<String, Object> cla = new HashMap<>();  
                 cla.put("type_id" ,urls.get(i));  
-                cla.put("type_name",names.get(i);  
+                cla.put("type_name",names.get(i));  
                 classList.add(cla);  
             }
-            results.put("list", classList);			
+            results.put("class", classList);			
         } catch (JSONException e2) {
             SpiderDebug.log(e2);
         }
