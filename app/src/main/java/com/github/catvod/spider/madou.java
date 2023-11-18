@@ -90,7 +90,7 @@ public class madou extends Spider {
               
             // 遍历数组 
             for (int i = 0; i < names.size(); i++) {    
-                Map<String, Object> cla = new HashMap<>();    
+                JSONObject cla = new JSONObject();    
                 cla.put("name", names.get(i));    
                 cla.put("url", urls.get(i));    
                 cla.put("pic", pics.get(i));    
