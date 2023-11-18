@@ -91,10 +91,10 @@ public class madou extends Spider {
             // 遍历数组 
             for (int i = 0; i < names.size(); i++) {    
                 JSONObject cla = new JSONObject();    
-                cla.put("name", names.get(i) +"$$$"+ urls.get(i));    
-                cla.put("url", names.get(i));    
-                cla.put("pic", pics.get(i));    
-                cla.put("remarks", remarks.get(i));    
+                cla.put("vod_id", names.get(i) +"$$$"+ urls.get(i));    
+                cla.put("vod_name", names.get(i));    
+                cla.put("vod_pic", pics.get(i));    
+                cla.put("vod_remarks", remarks.get(i));    
                 list.put(cla);    
             }
 			dataObject.put("list", list);
