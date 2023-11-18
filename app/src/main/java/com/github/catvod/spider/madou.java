@@ -147,7 +147,7 @@ public class madou extends Spider {
                 extractedText = matcher.group(1);
 			}				
 
-            Pattern p = Pattern.compile("<a href=\"(.*?)\" class=\\"(.*?)\\">(.*?)<\\/a>");  
+            Pattern p = Pattern.compile("<a href=\"(.*?)\" class=\"(.*?)\">(.*?)<\/a>");  
             Matcher m = p.matcher(extractedText);  
               
             ArrayList<String> urls = new ArrayList<String>();  
@@ -156,7 +156,7 @@ public class madou extends Spider {
                 urls.add(m.group(1));  
                 names.add(m.group(3));  
             }    
-            ArrayList<> classList = new ArrayList<>();  
+            ArrayList<String> classList = new ArrayList<>();  
             for (int i = 0; i < urls.size(); i++) {  
                 Map<String, Object> cla = new HashMap<>();  
                 cla.type_id = urls.get(i);  
