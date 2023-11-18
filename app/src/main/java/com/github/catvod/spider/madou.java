@@ -159,8 +159,8 @@ public class madou extends Spider {
             ArrayList<String> classList = new ArrayList<>();  
             for (int i = 0; i < urls.size(); i++) {  
                 Map<String, Object> cla = new HashMap<>();  
-                cla.type_id = urls.get(i);  
-                cla.type_name = names.get(i);  
+                cla.put("type_id" ,urls.get(i));  
+                cla.put("type_name",names.get(i);  
                 classList.add(cla);  
             }
             results.put("list", classList);			
