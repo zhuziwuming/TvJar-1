@@ -107,11 +107,11 @@ public class madou extends Spider {
 		
 		JSONObject dataObject = null;
 		try {
-		    String name = explode("$$$", ids)[0];  
+		    String name = ids.split("$$$")[0];  
             if (name.contains(" ")){  
-                name = explode(" ", name)[1];  
+                name = name.split(" ",)[1];  
             }  
-            String url  = explode("$$$", ids)[1];  
+            String url  = ids.split("$$$")[1];  
               
             Map<String, Object> vod = new HashMap<>();  
             vod.put("vod_id", url);  
@@ -147,7 +147,7 @@ public class madou extends Spider {
                 extractedText = matcher.group(1);
 			}				
 
-            Pattern p = Pattern.compile("<a href\\=\\\"(.*?)\" class\\=\\\"(.*?)\\\">(.*?)<\\/a>");  
+            Pattern p = Pattern.compile("<a href\\=\\\"(.*?)\\\" class\\=\\\"(.*?)\\\">(.*?)<\\/a>");  
             Matcher m = p.matcher(extractedText);  
               
             ArrayList<String> urls = new ArrayList<String>();  
