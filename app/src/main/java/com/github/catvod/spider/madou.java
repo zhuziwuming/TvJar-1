@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import java.lang.String;
@@ -51,8 +52,8 @@ public class madou extends Spider {
         try { 
             
             html = OkHttpUtil.string(url, Headers());
-			String start = html.indexOf("class=\"box\"");  
-            String end = html.indexOf("class=\"box\"", start + 11); //跳过第一个，寻找下面的box  
+			int start = html.indexOf("class=\"box\"");  
+            int end = html.indexOf("class=\"box\"", start + 11); //跳过第一个，寻找下面的box  
             String string = html.substring(start, end + 11 - start);  
               
             Pattern p1 = Pattern.compile("<a style=\"\" href=\"(.*?)\" title=\"(.*?)\">");  
@@ -80,7 +81,7 @@ public class madou extends Spider {
             while (m3.find()) {  
                 remarks.add(m3.group(1));  
             }
-			JSONObject dataObject = new JSONObject();
+			dataObject = new JSONObject();
 			// 创建一个新的列表来存储结果  
             List<Map<String, Object>> list = new ArrayList<>();  
               
@@ -103,14 +104,14 @@ public class madou extends Spider {
 
     @Override
     public String detailContent(List<String> ids) {
-		String url = api + "&ids=" + ids.get(0);
+		
 		JSONObject dataObject = null;
 		try {
-		    String name = explode("$$$", $ids)[0];  
+		    String name = explode("$$$", ids)[0];  
             if (name.contains(" ")){  
                 name = explode(" ", name)[1];  
             }  
-            String url = explode("$$$", $ids)[1];  
+            String url  = explode("$$$", ids)[1];  
               
             Map<String, Object> vod = new HashMap<>();  
             vod.put("vod_id", url);  
@@ -121,7 +122,7 @@ public class madou extends Spider {
             vod.put("vod_area", ""); //地区  
             vod.put("vod_remarks", "");  
             vod.put("vod_actor", "悟空"); //演员  
-            vod.put("vod_director", getRandomDirector); //导演  
+            vod.put("vod_director", getRandomDirector()); //导演  
             vod.put("vod_content", "随便搞点什么吧"); //简介  
             vod.put("vod_play_from", "madou");  
             vod.put("vod_play_url", api + url);
@@ -140,12 +141,13 @@ public class madou extends Spider {
             String data = OkHttpUtil.string(api, Headers()); 
             //String start = extractBetween(data, "<strong>", "</strong>");  
 		    Pattern pattern = Pattern.compile("<strong>(.*?)<\\/strong>");  
-            Matcher matcher = pattern.matcher(html);  
+            Matcher matcher = pattern.matcher(data); 
+			String extractedText = "";
             if (matcher.find()) {  
-                String extractedText = matcher.group(1);
+                extractedText = matcher.group(1);
 			}				
 
-            Pattern p = Pattern.compile("<a href=\"(.*?)\" class=\"(.*?)\">(.*?)<\\/a>");  
+            Pattern p = Pattern.compile("<a href=\"(.*?)\" class=\\"(.*?)\\">(.*?)<\\/a>");  
             Matcher m = p.matcher(extractedText);  
               
             ArrayList<String> urls = new ArrayList<String>();  
@@ -153,11 +155,10 @@ public class madou extends Spider {
             while (m.find()) {  
                 urls.add(m.group(1));  
                 names.add(m.group(3));  
-            }  
-              
-            ArrayList<ClassType> classList = new ArrayList<ClassType>();  
+            }    
+            ArrayList<> classList = new ArrayList<>();  
             for (int i = 0; i < urls.size(); i++) {  
-                ClassType cla = new ClassType();  
+                Map<String, Object> cla = new HashMap<>();  
                 cla.type_id = urls.get(i);  
                 cla.type_name = names.get(i);  
                 classList.add(cla);  
