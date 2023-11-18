@@ -117,8 +117,9 @@ public class madou extends Spider {
             String url  = id.split("$$$")[1];  
               
             dataObject = new JSONObject();
+			JSONArray Array = new JSONArray();
 			// 创建一个新的列表来存储结果  
-            JSONArray vod = new JSONArray();  
+            JSONObject vod = new JSONObject();  
             vod.put("vod_id", url);  
             vod.put("vod_name", name); //标题  
             vod.put("vod_pic", ""); //图片  
@@ -131,7 +132,8 @@ public class madou extends Spider {
             vod.put("vod_content", "随便搞点什么吧"); //简介  
             vod.put("vod_play_from", "madou");  
             vod.put("vod_play_url", api + url);
-        	dataObject.put("list", vod);		
+			Array.put(vod);
+        	dataObject.put("list", Array);		
 		}catch (Exception e10) {
             SpiderDebug.log(e10);
             return "";
