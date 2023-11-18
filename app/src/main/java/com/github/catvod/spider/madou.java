@@ -67,10 +67,10 @@ public class madou extends Spider {
             Matcher m2 = p2.matcher(string);  
             Matcher m3 = p3.matcher(string);  
               
-            List<String> names = new ArrayList<>();  
-            List<String> urls = new ArrayList<>();  
-            List<String> pics = new ArrayList<>();  
-            List<String> remarks = new ArrayList<>();  
+            ArrayList<String> names = new ArrayList<>();  
+            ArrayList<String> urls = new ArrayList<>();  
+            ArrayList<String> pics = new ArrayList<>();  
+            ArrayList<String> remarks = new ArrayList<>();  
               
             while (m1.find()) {  
                 names.add(m1.group(2));  
