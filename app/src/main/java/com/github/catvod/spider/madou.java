@@ -53,7 +53,7 @@ public class madou extends Spider {
 		JSONObject dataObject = null;
 		String html ="";
 		String url = api + "&t=" + tid + "&pg=" + pg;
-		Toast.makeText(HomeActivity, "列表url：" + url, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "列表url：" + url, Toast.LENGTH_SHORT).show();
         try {            
             html = OkHttpUtil.string(url, Headers());
 			int start = html.indexOf("class=\"box\"");  
