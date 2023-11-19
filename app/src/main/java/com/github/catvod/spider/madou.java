@@ -222,10 +222,10 @@ public class madou extends Spider {
     public String playerContent(String str, String str2, List<String> list) {
         JSONObject result = new JSONObject();
         try {
-            //result.put("parse", 1);
+            result.put("parse", 0);
             result.put("url", str2);
             result.put("jx", "0");
-            //result.put("playUrl", "");
+            result.put("playUrl", "");
         } catch (Exception e2) {
             SpiderDebug.log(e2);
         }
