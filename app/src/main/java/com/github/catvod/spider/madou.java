@@ -114,7 +114,7 @@ public class madou extends Spider {
             //if (name.contains("\\s+")){  
                 //name = name.split("\\s+")[1];  
             //}  
-            String url  = id.split("$$$")[1];  
+            String url  = id.split("xxx")[1];  
               
             dataObject = new JSONObject();
 			JSONArray Array = new JSONArray();
