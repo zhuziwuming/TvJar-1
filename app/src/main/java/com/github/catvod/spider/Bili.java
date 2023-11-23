@@ -2,7 +2,6 @@ package com.github.catvod.spider;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Base64;
 
 import com.github.catvod.crawler.Spider;
 import com.github.catvod.crawler.SpiderDebug;
@@ -30,9 +29,22 @@ public class Bili extends Spider {
         try {
             String content = OkHttpUtil.string(extend, null);
             ext = new JSONObject(content);
+            
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private String getCookie(String cookie) {
+        cookie = ext.optString("cookie");
+
+        if (TextUtils.isEmpty(cookie)) {
+            cookie = "buvid3=666"; 
+        }
+        if(cookie.startsWith("http")){
+            cookie =OkHttpUtil.string(cookie, null);
+        }
+        return cookie;
     }
 
     @Override
@@ -48,6 +60,16 @@ public class Bili extends Spider {
         }
         return results.toString();
     }
+    
+    protected HashMap<String, String> getHeaders(String url) {
+        HashMap<String, String> 
+        headers = new HashMap<>();
+        headers.put("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36");
+        headers.put("cookie",getCookie("cookie"));
+        headers.put("Referer", "https://api.bilibili.com");
+       
+        return headers;
+    }
 
     @Override
     public String homeVideoContent() {
@@ -55,7 +77,7 @@ public class Bili extends Spider {
             JSONArray videos = new JSONArray();
             try {
                 String url = "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=窗 白噪音";
-                String content = OkHttpUtil.string(url, null);
+                String content = OkHttpUtil.string(url, getHeaders(url));
                 JSONObject data = new JSONObject(content).getJSONObject("data");
                 JSONArray RArray = data.getJSONArray("result");
                 for (int i = 0; i < RArray.length(); i++) {
@@ -108,7 +130,7 @@ public class Bili extends Spider {
                 }
             }
             url += "&page=" + pg;
-            String content = OkHttpUtil.string(url, null);
+            String content = OkHttpUtil.string(url, getHeaders(url));
             JSONObject data = new JSONObject(content).getJSONObject("data");
             JSONArray list = new JSONArray();
             JSONArray RSArray = data.getJSONArray("result");
@@ -153,13 +175,13 @@ public class Bili extends Spider {
         int i = 0;
         try {
             String str = ids.get(0);
-            String sb2 = "https://api.bilibili.com/x/web-interface/archive/stat?bvid=" + str;
+            String sb2 = "https://api.bilibili.com/x/web-interface/view?bvid=" + str;
             JSONObject jSONObject = new JSONObject(OkHttpUtil.string(sb2, null));
             JSONObject jSONObject2 = jSONObject.getJSONObject("data");
             long j = jSONObject2.getLong("aid");
             String sb4 = j + "";
             String sb6 = "https://api.bilibili.com/x/web-interface/view?aid=" + sb4;
-            JSONObject jSONObject3 = new JSONObject(OkHttpUtil.string(sb6, null));
+            JSONObject jSONObject3 = new JSONObject(OkHttpUtil.string(sb6, getHeaders(sb6)));
             JSONObject jSONObject4 = jSONObject3.getJSONObject("data");
             JSONObject v = new JSONObject();
             v.put("vod_id", str);
@@ -177,7 +199,7 @@ public class Bili extends Spider {
             v.put("vod_director", "");
             String string4 = jSONObject4.getString("desc");
             v.put("vod_content", string4);
-            v.put("vod_play_from", "B站");
+            v.put("vod_play_from", "哔哔");
             ArrayList arrayList = new ArrayList();
             JSONArray jSONArray = jSONObject4.getJSONArray("pages");
             while (true) {
@@ -218,7 +240,7 @@ public class Bili extends Spider {
             String str3 = split[0];
             String str4 = split[1];
             String sb2 = "https://api.bilibili.com/x/player/playurl?avid=" + str3 + "&cid= " + str4 + "&qn=120&fourk=1";
-            JSONObject jSONObject = new JSONObject(OkHttpUtil.string(sb2, null));
+            JSONObject jSONObject = new JSONObject(OkHttpUtil.string(sb2, getHeaders(sb2)));
             JSONObject jSONObject2 = new JSONObject();
             jSONObject2.put("parse", "0");
             jSONObject2.put("playUrl", "");
@@ -240,7 +262,7 @@ public class Bili extends Spider {
         try {
             JSONObject result = new JSONObject();
             String url = "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=" + URLEncoder.encode(key);
-            String content = OkHttpUtil.string(url, null);
+            String content = OkHttpUtil.string(url, getHeaders(url));
             JSONObject data = new JSONObject(content).getJSONObject("data");
             JSONArray videos = new JSONArray();
             JSONArray RSArray = data.getJSONArray("result");
