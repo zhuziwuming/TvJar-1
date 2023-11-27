@@ -198,7 +198,7 @@ public class Bili extends Spider {
             v.put("vod_director", "");
             String string4 = jSONObject4.getString("desc");
             v.put("vod_content", string4);
-            v.put("vod_play_from", "哔哔");
+            v.put("vod_play_from", "哔哩B站");
             ArrayList arrayList = new ArrayList();
             JSONArray jSONArray = jSONObject4.getJSONArray("pages");
             while (true) {
