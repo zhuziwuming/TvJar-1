@@ -40,6 +40,7 @@ dependencies {
     implementation "org.jsoup:jsoup:$jsoup_version"
     implementation "cn.wanghaomiao:JsoupXpath:$jsoupxpath_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation 'com.google.zxing:core:3.4.1'
     implementation ("com.github.liujingxing.rxhttp:rxhttp:$rxhttp_version") {
         exclude group: "com.squareup.okhttp3"
     }
