@@ -2,9 +2,6 @@ plugins {
     id 'com.android.application'
     id 'ru.cleverpumpkin.proguard-dictionaries-generator'
 }
-ext {    
-    clientId = "76917ccccd4441c39457a04f6084fb2f"    
-}
 android {
     compileSdkVersion rootProject.compileSdkVersion
 
