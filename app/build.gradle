@@ -4,7 +4,7 @@ plugins {
 }
 ext {    
     clientId = "76917ccccd4441c39457a04f6084fb2f"    
-   }
+}
 android {
     compileSdkVersion rootProject.compileSdkVersion
 
