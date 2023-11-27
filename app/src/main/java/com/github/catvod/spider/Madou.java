@@ -36,9 +36,12 @@ public class Madou extends Spider {
     protected JSONObject ext = null;
     private static String api;
     @Override
-    public void init(Context context, String extend) {
-		super.init(context, extend);		
-        api = extend;
+    public void init(Context context, String extend) throws Exception  {
+	super.init(context, extend);
+        try{
+            api = extend;
+	}catch (Exception ignored) {
+        }	
     }
 
     protected HashMap<String, String> Headers() {
