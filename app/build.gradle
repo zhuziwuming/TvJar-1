@@ -12,6 +12,7 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.appVersionCode
         versionName rootProject.appVersionName
+        buildConfigField("String", "CLIENT_ID", "\"${clientId}\"")
     }
 
     buildTypes {
