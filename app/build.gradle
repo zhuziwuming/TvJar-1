@@ -42,6 +42,10 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
+    debugImplementation 'org.chromium.net:cronet-embedded:101.4951.41'
+    implementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
+
+    
     implementation ("com.github.liujingxing.rxhttp:rxhttp:$rxhttp_version") {
         exclude group: "com.squareup.okhttp3"
     }
