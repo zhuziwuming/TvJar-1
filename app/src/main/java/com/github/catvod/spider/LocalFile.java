@@ -115,9 +115,11 @@ public class LocalFile extends Spider {
         }
     }
 
-    public void init(Context context) {
+    public void init(Context context) throws Exception  {
+        }{
         LocalFile.super.init(context);
-    }
+    }catch (Exception ignored) {
+        }
 
     public String playerContent(String str, String str2, List<String> list) {
         try{
