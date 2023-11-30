@@ -53,6 +53,16 @@ public class Init {
         get().handler.postDelayed(runnable, delay);
     }
 
+    public static void checkPermission() {
+        try {
+            Activity activity = Init.getActivity();
+            if (activity == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+            activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 9999);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static Activity getActivity() throws Exception {
         Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
         Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
