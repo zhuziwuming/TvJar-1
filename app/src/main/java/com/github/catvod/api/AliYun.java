@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.UrlQuerySanitizer;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -18,7 +17,6 @@ import android.widget.ImageView;
 import com.github.catvod.bean.Result;
 import com.github.catvod.bean.Sub;
 import com.github.catvod.bean.Vod;
-import com.github.catvod.bean.ali.Cache;
 import com.github.catvod.bean.ali.Code;
 import com.github.catvod.bean.ali.Data;
 import com.github.catvod.bean.ali.Download;
@@ -34,14 +32,10 @@ import com.github.catvod.net.OkHttp;
 import com.github.catvod.net.OkResult;
 import com.github.catvod.spider.Init;
 import com.github.catvod.spider.Proxy;
-import com.github.catvod.utils.MultiThread;
-import com.github.catvod.utils.MultiThreadedDownloader;
 import com.github.catvod.utils.Path;
-import com.github.catvod.utils.ProxyVideo;
 import com.github.catvod.utils.QRCode;
 import com.github.catvod.utils.Utils;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -51,14 +45,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.ReentrantLock;
 
-import fi.iki.elonen.NanoHTTPD;
 import okhttp3.Response;
 
 public class AliYun {
@@ -68,11 +59,9 @@ public class AliYun {
     private AlertDialog dialog;
     private String refreshToken;
     private Share share;
-    private Cache cache;
-    private Map<String, String> downloadMap;
-    private Map<String, String> shareDownloadMap;
-    private Map<String, Map<String, String>> m3u8MediaMap;
-    private final ReentrantLock rLock;
+    private OAuth oauth;
+    private Drive drive;
+    private User user;
 
     private static class Loader {
         static volatile AliYun INSTANCE = new AliYun();
@@ -82,18 +71,23 @@ public class AliYun {
         return Loader.INSTANCE;
     }
 
-    public File getCache() {
-        return Path.tv("aliyun");
+    public File getUserCache() {
+        return Path.cache("aliyundrive_user");
+    }
+
+    public File getOAuthCache() {
+        return Path.cache("aliyundrive_oauth");
+    }
+
+    public File getDriveCache() {
+        return Path.cache("aliyundrive_drive");
     }
 
     private AliYun() {
-        Init.checkPermission();
         tempIds = new ArrayList<>();
-        cache = Cache.objectFrom(Path.read(getCache()));
-        downloadMap = new HashMap<>();
-        shareDownloadMap = new HashMap<>();
-        m3u8MediaMap = new HashMap<>();
-        rLock = new ReentrantLock();
+        user = User.objectFrom(Path.read(getUserCache()));
+        oauth = OAuth.objectFrom(Path.read(getOAuthCache()));
+        drive = Drive.objectFrom(Path.read(getDriveCache()));
     }
 
     public void setRefreshToken(String token) {
@@ -104,7 +98,7 @@ public class AliYun {
         Object[] result = new Object[3];
         result[0] = 200;
         result[1] = "text/plain";
-        result[2] = new ByteArrayInputStream(cache.getUser().getRefreshToken().getBytes());
+        result[2] = new ByteArrayInputStream(user.getRefreshToken().getBytes());
         return result;
     }
 
@@ -119,13 +113,13 @@ public class AliYun {
         HashMap<String, String> headers = getHeader();
         headers.put("x-share-token", share.getShareToken());
         headers.put("X-Canary", "client=Android,app=adrive,version=v4.3.1");
-        if (cache.getUser().isAuthed()) headers.put("authorization", cache.getUser().getAuthorization());
+        if (user.isAuthed()) headers.put("authorization", user.getAuthorization());
         return headers;
     }
 
     private HashMap<String, String> getHeaderOpen() {
         HashMap<String, String> headers = getHeader();
-        headers.put("authorization", cache.getOAuth().getAuthorization());
+        headers.put("authorization", oauth.getAuthorization());
         return headers;
     }
 
@@ -134,7 +128,7 @@ public class AliYun {
         OkResult result = OkHttp.post(api, param.toString(), getHeader());
         SpiderDebug.log(result.getCode() + "," + api + "," + result.getBody());
         if (isManyRequest(result.getBody())) return false;
-        cache.setOAuth(OAuth.objectFrom(result.getBody()));
+        oauth = OAuth.objectFrom(result.getBody()).save();
         return true;
     }
 
@@ -165,7 +159,7 @@ public class AliYun {
     private boolean isManyRequest(String result) {
         if (!result.contains("Too Many Requests")) return false;
         Utils.notify("洗洗睡吧，Too Many Requests。");
-        cache.getOAuth().clean();
+        oauth.clean().save();
         return true;
     }
 
@@ -182,42 +176,42 @@ public class AliYun {
         param.addProperty("share_pwd", "");
         String json = post("v2/share_link/get_share_token", param);
         share = Share.objectFrom(json).setShareId(shareId).setTime();
-        if (share.getShareToken().isEmpty()) Utils.notify("该分享已失效。");
+        if (share.getShareToken().isEmpty()) Utils.notify("来晚啦,该分享已失效。");
     }
 
     private boolean refreshAccessToken() {
         try {
             SpiderDebug.log("refreshAccessToken...");
             JsonObject param = new JsonObject();
-            String token = cache.getUser().getRefreshToken();
+            String token = user.getRefreshToken();
             if (token.isEmpty()) token = refreshToken;
             if (token != null && token.startsWith("http")) token = OkHttp.string(token).trim();
             param.addProperty("refresh_token", token);
             param.addProperty("grant_type", "refresh_token");
             String json = post("https://auth.aliyundrive.com/v2/account/token", param);
-            cache.setUser(User.objectFrom(json));
-            if (cache.getUser().getAccessToken().isEmpty()) throw new Exception(json);
+            user = User.objectFrom(json).save();
+            if (user.getAccessToken().isEmpty()) throw new Exception(json);
             return true;
         } catch (Exception e) {
             if (e instanceof TimeoutException) return onTimeout();
-            cache.getUser().clean();
             e.printStackTrace();
+            user.clean().save();
             stopService();
             startFlow();
             return true;
         } finally {
-            while (cache.getUser().getAccessToken().isEmpty()) SystemClock.sleep(250);
+            while (user.getAccessToken().isEmpty()) SystemClock.sleep(250);
         }
     }
 
     private void getDriveId() {
         SpiderDebug.log("Get Drive Id...");
         String json = auth("https://user.aliyundrive.com/v2/user/get", "{}", true);
-        cache.setDrive(Drive.objectFrom(json));
+        drive = Drive.objectFrom(json).save();
     }
 
     private boolean oauthRequest() {
-		String clientID = "76917ccccd4441c39457a04f6084fb2f";
+        String clientID = "76917ccccd4441c39457a04f6084fb2f";
         SpiderDebug.log("OAuth Request...");
         JsonObject param = new JsonObject();
         param.addProperty("authorize", 1);
@@ -236,11 +230,11 @@ public class AliYun {
     }
 
     private boolean refreshOpenToken() {
-        if (cache.getOAuth().getRefreshToken().isEmpty()) return oauthRequest();
+        if (oauth.getRefreshToken().isEmpty()) return oauthRequest();
         SpiderDebug.log("refreshOpenToken...");
         JsonObject param = new JsonObject();
         param.addProperty("grant_type", "refresh_token");
-        param.addProperty("refresh_token", cache.getOAuth().getRefreshToken());
+        param.addProperty("refresh_token", oauth.getRefreshToken());
         return alist("token", param);
     }
 
@@ -253,7 +247,7 @@ public class AliYun {
         List<Item> subs = new ArrayList<>();
         listFiles(shareId, new Item(getParentFileId(fileId, share)), files, subs);
         Collections.sort(files);
-        List<String> playFrom = Arrays.asList("原画", "普画", "极速");
+        List<String> playFrom = Arrays.asList("原画", "智能");
         List<String> episode = new ArrayList<>();
         List<String> playUrl = new ArrayList<>();
         for (Item file : files) episode.add(file.getDisplayName() + "$" + shareId + "+" + file.getFileId() + findSubs(file.getName(), subs));
@@ -336,38 +330,16 @@ public class AliYun {
         return sub;
     }
 
-    public String getShareDownloadUrl(String shareId, String fileId) {
-        try {
-            if (shareDownloadMap.containsKey(fileId) && shareDownloadMap.get(fileId) != null && !isExpire(shareDownloadMap.get(fileId))) return shareDownloadMap.get(fileId);
-            refreshShareToken(shareId);
-            SpiderDebug.log("getShareDownloadUrl..." + fileId);
-            JsonObject param = new JsonObject();
-            param.addProperty("file_id", fileId);
-            param.addProperty("share_id", shareId);
-            param.addProperty("expire_sec", 600);
-            String json = auth("v2/file/get_share_link_download_url", param.toString(), false);
-            String url = JsonParser.parseString(json).getAsJsonObject().get("download_url").getAsString();
-            shareDownloadMap.put(fileId, url);
-            return url;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
     public String getDownloadUrl(String shareId, String fileId) {
         try {
-            if (downloadMap.containsKey(fileId) && downloadMap.get(fileId) != null && !isExpire(downloadMap.get(fileId))) return downloadMap.get(fileId);
             refreshShareToken(shareId);
             SpiderDebug.log("getDownloadUrl..." + fileId);
             tempIds.add(0, copy(shareId, fileId));
             JsonObject param = new JsonObject();
             param.addProperty("file_id", tempIds.get(0));
-            param.addProperty("drive_id", cache.getDrive().getDriveId());
+            param.addProperty("drive_id", drive.getDriveId());
             String json = oauth("openFile/getDownloadUrl", param.toString(), true);
-            String url = Download.objectFrom(json).getUrl();
-            downloadMap.put(fileId, url);
-            return url;
+            return Download.objectFrom(json).getUrl();
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -383,7 +355,7 @@ public class AliYun {
             tempIds.add(0, copy(shareId, fileId));
             JsonObject param = new JsonObject();
             param.addProperty("file_id", tempIds.get(0));
-            param.addProperty("drive_id", cache.getDrive().getDriveId());
+            param.addProperty("drive_id", drive.getDriveId());
             param.addProperty("category", "live_transcoding");
             param.addProperty("url_expire_sec", "14400");
             String json = oauth("openFile/getVideoPreviewPlayInfo", param.toString(), true);
@@ -396,27 +368,14 @@ public class AliYun {
         }
     }
 
-    public String playerContent(String[] ids, String flag) {
-        if (flag.split("#")[0].equals("普画")) {
-            return getPreviewContent(ids);
-        } else if (flag.split("#")[0].equals("原画")) {
-            return Result.get().url(proxyVideoUrl("open", ids[0], ids[1])).octet().subs(getSubs(ids)).header(getHeader()).string();
-        } else if (flag.split("#")[0].equals("分享原画")) {
-            return Result.get().url(proxyVideoUrl("share", ids[0], ids[1])).octet().subs(getSubs(ids)).header(getHeader()).string();
-        } else {
-            return "";
-        }
+    public String playerContent(String[] ids, boolean original) {
+        if (original) return Result.get().url(getDownloadUrl(ids[0], ids[1])).octet().subs(getSubs(ids)).header(getHeader()).string();
+        else return getPreviewContent(ids);
     }
 
     private String getPreviewContent(String[] ids) {
         Preview.Info info = getVideoPreviewPlayInfo(ids[0], ids[1]);
         List<String> url = getPreviewUrl(info);
-        List<String> proxyUrl = new ArrayList<>();
-        for(int i = 0; i < url.size(); i++) {
-            String item = url.get(i);
-            if (item.startsWith("http")) item = proxyVideoUrl("preview", ids[0], ids[1], url.get(i-1));
-            proxyUrl.add(item);
-        }
         List<Sub> subs = getSubs(ids);
         subs.addAll(getSubs(info));
         return Result.get().url(url).m3u8().subs(subs).header(getHeader()).string();
@@ -439,10 +398,10 @@ public class AliYun {
     }
 
     private String copy(String shareId, String fileId) {
-        if (cache.getDrive().getDriveId().isEmpty()) getDriveId();
+        if (drive.getDriveId().isEmpty()) getDriveId();
         SpiderDebug.log("Copy..." + fileId);
         String json = "{\"requests\":[{\"body\":{\"file_id\":\"%s\",\"share_id\":\"%s\",\"auto_rename\":true,\"to_parent_file_id\":\"root\",\"to_drive_id\":\"%s\"},\"headers\":{\"Content-Type\":\"application/json\"},\"id\":\"0\",\"method\":\"POST\",\"url\":\"/file/copy\"}],\"resource\":\"file\"}";
-        json = String.format(json, fileId, shareId, cache.getDrive().getDriveId());
+        json = String.format(json, fileId, shareId, drive.getDriveId());
         Resp resp = Resp.objectFrom(auth("adrive/v2/batch", json, true));
         return resp.getResponse().getBody().getFileId();
     }
@@ -458,123 +417,9 @@ public class AliYun {
     private boolean delete(String fileId) {
         SpiderDebug.log("Delete..." + fileId);
         String json = "{\"requests\":[{\"body\":{\"drive_id\":\"%s\",\"file_id\":\"%s\"},\"headers\":{\"Content-Type\":\"application/json\"},\"id\":\"%s\",\"method\":\"POST\",\"url\":\"/file/delete\"}],\"resource\":\"file\"}";
-        json = String.format(json, cache.getDrive().getDriveId(), fileId, fileId);
+        json = String.format(json, drive.getDriveId(), fileId, fileId);
         Resp resp = Resp.objectFrom(auth("adrive/v2/batch", json, true));
         return resp.getResponse().getStatus() == 404;
-    }
-
-    private String proxyVideoUrl(String cate, String shareId, String fileId) {
-        return String.format(Proxy.getUrl() + "?do=ali&type=video&cate=%s&shareId=%s&fileId=%s", cate, shareId, fileId);
-    }
-
-    private String proxyVideoUrl(String cate, String shareId, String fileId, String templateId) {
-        return String.format(Proxy.getUrl() + "?do=ali&type=video&cate=%s&shareId=%s&fileId=%s&templateId=%s", cate, shareId, fileId, templateId);
-    }
-
-    private String proxyVideoUrl(String cate, String shareId, String fileId, String templateId, String mediaId) {
-        return String.format(Proxy.getUrl() + "?do=ali&type=video&cate=%s&shareId=%s&fileId=%s&templateId=%s&mediaId=%s", cate, shareId, fileId, templateId, mediaId);
-    }
-
-    private static boolean isExpire(String url) {
-        String expires = new UrlQuerySanitizer(url).getValue("x-oss-expires");
-        if (TextUtils.isEmpty(expires)) return false;
-        if (new Long(expires) - getTimeStamp() <= 60) return true;
-        return false;
-    }
-
-    private static long getTimeStamp() {
-        return System.currentTimeMillis() / 1000;
-    }
-
-    public Object[] proxyVideo(Map<String, String> params) throws Exception {
-        String fileId = params.get("fileId");
-        String shareId = params.get("shareId");
-        String cate = params.get("cate");
-        String templateId = params.get("templateId");
-        String mediaId = params.get("mediaId");
-        String downloadUrl = "";
-        int thread = 1;
-        switch (cate) {
-            case "preview":
-                return previewProxy(shareId, fileId, templateId);
-            case "m3u8":
-                rLock.lock();
-                String mediaUrl = m3u8MediaMap.get(fileId).get(mediaId);
-                if (isExpire(mediaUrl)) {
-                    getM3u8(shareId, fileId, templateId);
-                    mediaUrl = m3u8MediaMap.get(fileId).get(mediaId);
-                }
-                rLock.unlock();
-                downloadUrl = mediaUrl;
-                break;
-            case "open":
-                downloadUrl = getDownloadUrl(shareId, fileId);
-                thread = 30;
-                break;
-            case "share":
-                downloadUrl = getShareDownloadUrl(shareId, fileId);
-                thread = 30;
-                break;
-            default:
-                break;
-        }
-        Map<String, String> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (String key : params.keySet()) headers.put(key, params.get(key));
-        headers.remove("do");
-        headers.remove("type");
-        headers.remove("cate");
-        headers.remove("fileId");
-        headers.remove("shareId");
-        headers.remove("templateId");
-        headers.remove("mediaId");
-        headers.remove("host");
-        headers.remove("remote-addr");
-        headers.remove("http-client-ip");
-        NanoHTTPD.Response mResponse;
-        if (thread == 1) {
-            mResponse = ProxyVideo.proxy(downloadUrl, headers);
-        } else {
-            mResponse = new MultiThreadedDownloader(downloadUrl, headers, thread).start();
-        }
-        return new Object[]{mResponse};
-    }
-
-    private Object[] previewProxy(String shareId, String fileId, String templateId) {
-        String m3u8 = getM3u8(shareId, fileId, templateId);
-        return new Object[]{200, "application/vnd.apple.mpegurl", new ByteArrayInputStream(m3u8.getBytes())};
-    }
-
-    private String getM3u8Url(String shareId, String fileId, String templateId) {
-        Preview.Info info = getVideoPreviewPlayInfo(shareId, fileId);
-        List<String> url = getPreviewUrl(info);
-        Map<String, String> previewMap = new HashMap<>();
-        for(int i = 0; i < url.size(); i=i+2) {
-            previewMap.put(url.get(i), url.get(i+1));
-        }
-        String m3u8Url = previewMap.get(templateId);
-        return m3u8Url;
-    }
-
-    private String getM3u8(String shareId, String fileId, String templateId) {
-        String m3u8Url = getM3u8Url(shareId, fileId, templateId);
-        String m3u8 = OkHttp.string(m3u8Url, getHeader());
-        String[] m3u8Arr = m3u8.split("\\\n");
-        List<String> listM3u8 = new ArrayList<>();
-        Map<String, String> media = new HashMap<>();
-        String site = m3u8Url.substring(0, m3u8Url.lastIndexOf("/")) + "/";
-        int mediaId = 0;
-        for(String oneLine:m3u8Arr) {
-            String thisOne = oneLine;
-            if (oneLine.contains("x-oss-expires")) {
-                media.put("" + mediaId, site + thisOne);
-                thisOne = proxyVideoUrl("m3u8", shareId, fileId, templateId, "" + mediaId);
-                mediaId ++;
-            }
-            listM3u8.add(thisOne);
-        }
-        m3u8MediaMap.put(fileId, media);
-        String content = TextUtils.join("\n", listM3u8);
-        return content;
     }
 
     public Object[] proxySub(Map<String, String> params) throws Exception {
@@ -664,9 +509,9 @@ public class AliYun {
     }
 
     private void setToken(String value) {
-        cache.getUser().setRefreshToken(value);
         SpiderDebug.log("Token:" + value);
         Utils.notify("Token:" + value);
+        user.setRefreshToken(value);
         refreshAccessToken();
         stopService();
     }
