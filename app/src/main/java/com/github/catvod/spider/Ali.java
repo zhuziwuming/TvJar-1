@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class Ali extends Spider {
 
-    public static final Pattern pattern = Pattern.compile("www.(alipan|aliyundrive).com/s/([^/]+)(/folder/([^/]+))?");
+    public static final Pattern pattern = Pattern.compile("www.(aliyundrive|alipan)com/s/([^/]+)(/folder/([^/]+))?");
 
     @Override
     public void init(Context context, String extend) {
@@ -37,7 +37,7 @@ public class Ali extends Spider {
 
     @Override
     public String playerContent(String flag, String id, List<String> vipFlags) {
-        return AliYun.get().playerContent(id.split("\\+"), flag.split("#")[0].equals("原画"));
+        return AliYun.get().playerContent(id.split("\\+"), flag);
     }
 
     private Vod parseVod(Matcher matcher, String id) {
@@ -54,10 +54,11 @@ public class Ali extends Spider {
      */
     public String detailContentVodPlayFrom(List<String> ids) {
         List<String> playFrom = new ArrayList<>();
-        if (ids.size() < 2) return TextUtils.join("$$$", Arrays.asList("原画", "智能"));
+        if (ids.size() < 2) return TextUtils.join("$$$", Arrays.asList("原画", "普画", "极速"));
         for (int i = 1; i <= ids.size(); i++) {
             playFrom.add(String.format(Locale.getDefault(), "原画#%02d", i));
-            playFrom.add(String.format(Locale.getDefault(), "智能#%02d", i));
+            playFrom.add(String.format(Locale.getDefault(), "普画#%02d", i));
+            playFrom.add(String.format(Locale.getDefault(), "极速#%02d", i));
         }
         return TextUtils.join("$$$", playFrom);
     }
@@ -79,6 +80,7 @@ public class Ali extends Spider {
 
     public static Object[] proxy(Map<String, String> params) throws Exception {
         String type = params.get("type");
+        if ("video".equals(type)) return AliYun.get().proxyVideo(params);
         if ("sub".equals(type)) return AliYun.get().proxySub(params);
         if ("token".equals(type)) return AliYun.get().getToken();
         return null;
