@@ -147,32 +147,32 @@ public class WOGG extends Spider {
 
     @Override
     public String searchContent(String wd, boolean filter) {
-	String url = api+ "&wd=" + wd;
-	String data ="";
-	JSONObject dataObject = null;
-	try {
-	    data = OkHttpUtil.string(url, Headers());
-	    dataObject = new JSONObject(data);
+	    String url = api+ "&wd=" + wd;
+	    String data ="";
+	    JSONObject dataObject = null;
+	    try {
+	        data = OkHttpUtil.string(url, Headers());
+	        dataObject = new JSONObject(data);
             JSONArray jsonArray = dataObject.getJSONArray("list");
             JSONArray videos = new JSONArray();
             for (int i = 0; i < jsonArray.length(); i++) {
-		 JSONObject vObj = jsonArray.getJSONObject(i);
-		 String down_url = vObj.getString("vod_down_url");
-		 String vod_remarks = vObj.getString("vod_remarks");
-		 if(down_url.contains("$$$")){
-		    	down_url = down_url.split("$$$")[0];
-		 }
-		 if(down_url.contains("ali")){
-			vObj.put("vod_id", "push://" + down_url);	
-		        vObj.put("vod_remarks", vod_remarks + "(VIP)");
-		 }
-                 videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中					
-           }
-           dataObject.put("list", videos);        
-	} catch (Exception e) {
-            SpiderDebug.log(e);
-            return "";
+	    	    JSONObject vObj = jsonArray.getJSONObject(i);
+	    	    String down_url = vObj.getString("vod_down_url");
+	    	    String vod_remarks = vObj.getString("vod_remarks");
+	    	    if(down_url.contains("$$$")){
+	    	       	down_url = down_url.split("$$$")[0];
+	    	    }
+	    	    if(down_url.contains("ali")){
+	    	  	    vObj.put("vod_id", "push://" + down_url);	
+	    	        vObj.put("vod_remarks", vod_remarks + "(VIP)");
+	    	    }
+                videos.put(vObj);  // 将修改过的 video 数据放入新的 JSONArray中					
+            }
+            dataObject.put("list", videos);        
+	    } catch (Exception e) {
+                SpiderDebug.log(e);
+                return "";
         }
-          return dataObject.toString();
+        return dataObject.toString();
     }
 }
