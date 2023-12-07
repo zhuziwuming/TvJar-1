@@ -40,7 +40,7 @@ public class WOGG extends Spider {
     protected HashMap<String, String> Headers() {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36");
-		headers.put("Referer","https://www.wogg.xyz/");		
+		//headers.put("Referer","https://www.wogg.xyz/");		
         return headers;
     }
 
@@ -162,7 +162,7 @@ public class WOGG extends Spider {
 		 if(down_url.contains("$$$")){
 		    	down_url = down_url.split("$$$")[0];
 		 }
-		 if(down_url.contains("aliyundrive.com")){
+		 if(down_url.contains("ali")){
 			vObj.put("vod_id", "push://" + down_url);	
 		        vObj.put("vod_remarks", vod_remarks + "(VIP)");
 		 }
