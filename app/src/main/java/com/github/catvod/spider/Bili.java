@@ -24,14 +24,13 @@ public class Bili extends Spider {
     protected JSONObject ext = null;
 
     @Override
-    public void init(Context context, String extend) {
+    public void init(Context context, String extend)  throws Exception {
         super.init(context, extend);
         try {
             String content = OkHttpUtil.string(extend, null);
             ext = new JSONObject(content);
             
-        } catch (JSONException ex) {
-            ex.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -199,7 +198,7 @@ public class Bili extends Spider {
             v.put("vod_director", "");
             String string4 = jSONObject4.getString("desc");
             v.put("vod_content", string4);
-            v.put("vod_play_from", "哔哔");
+            v.put("vod_play_from", "哔哩B站");
             ArrayList arrayList = new ArrayList();
             JSONArray jSONArray = jSONObject4.getJSONArray("pages");
             while (true) {
