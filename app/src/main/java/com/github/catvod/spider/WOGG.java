@@ -120,11 +120,11 @@ public class WOGG extends Spider {
                         newArray.add(obj);  
                     }  
                 }
-				newClassArray = newArray;
+				JSONArray newClassArray = new JSONArray(newArray);
+				results.put("class", newClassArray);
 			}else{
-				newClassArray = ext.getJSONObject("classes");
-			}  
-            results.put("class", newClassArray);
+				results.put("class", ext.getJSONObject("classes"));
+			}
 			results.put("list", listArray);
             if (filter) {
                 results.put("filters", ext.getJSONObject("filter"));
