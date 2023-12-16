@@ -101,9 +101,29 @@ public class WOGG extends Spider {
 	
     @Override
     public String homeContent(boolean filter) {
+		String url =  api.replace("detail", "list");// xxx.com/api.php/provide/vod/?ac=list
         JSONObject results = new JSONObject();
+		JSONArray listArray = new JSONArray();
+		JSONObject dataObject = null;
+		String data ="";
         try {
-            results.put("class", ext.getJSONArray("classes"));
+			 
+			data = OkHttpUtil.string(url, Headers());
+            dataObject = new JSONObject(data);
+			JSONArray classarr = dataObject.getJSONArray("class");
+			List<JSONObject> newArray = new ArrayList<>();  
+  
+            for (int i = 0; i < classarr.length(); i++) {  
+                JSONObject obj = classarr.getJSONObject(i);  
+                int typePid = obj.getInt("type_pid");  
+                if (typePid == 0) {  
+                    newArray.add(obj);  
+                }  
+            }  
+              
+            JSONArray newClassArray = new JSONArray(newArray);
+            results.put("class", newClassArray);
+			results.put("list", listArray);
             if (filter) {
                 results.put("filters", ext.getJSONObject("filter"));
             }
