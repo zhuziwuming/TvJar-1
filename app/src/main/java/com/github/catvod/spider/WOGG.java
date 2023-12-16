@@ -105,9 +105,9 @@ public class WOGG extends Spider {
         JSONObject results = new JSONObject();
 		JSONArray listArray = new JSONArray();
 		JSONObject dataObject = null;
+		JSONArray newClassArray = new JSONArray();
 		String data ="";
-        try {
-			 
+        try {			 
 			data = OkHttpUtil.string(url, Headers());
             dataObject = new JSONObject(data);
 			JSONArray classarr = dataObject.getJSONArray("class");
@@ -120,12 +120,10 @@ public class WOGG extends Spider {
                         newArray.add(obj);  
                     }  
                 }
-				JSONArray newClassArray = new JSONArray(newArray);
+				newClassArray = new JSONArray(newArray);
 			}else{
 				newClassArray = ext.getJSONObject("classes");
 			}  
-              
-            JSONArray newClassArray = new JSONArray(newArray);
             results.put("class", newClassArray);
 			results.put("list", listArray);
             if (filter) {
