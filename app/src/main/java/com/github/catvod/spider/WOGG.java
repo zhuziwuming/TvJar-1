@@ -105,7 +105,6 @@ public class WOGG extends Spider {
         JSONObject results = new JSONObject();
 		JSONArray listArray = new JSONArray();
 		JSONObject dataObject = null;
-		JSONArray newClassArray = new JSONArray();
 		String data ="";
         try {			 
 			data = OkHttpUtil.string(url, Headers());
