@@ -111,7 +111,7 @@ public class WOGG extends Spider {
             dataObject = new JSONObject(data);
 			JSONArray classarr = dataObject.getJSONArray("class");
 			List<JSONObject> newArray = new ArrayList<>();
-            if (classarr.length() > 0) { 
+            if (classarr.length() > 0) { //取大分类
                 for (int i = 0; i < classarr.length(); i++) {  
                     JSONObject obj = classarr.getJSONObject(i);  
                     int typePid = obj.getInt("type_pid");  
@@ -122,7 +122,7 @@ public class WOGG extends Spider {
 				JSONArray newClassArray = new JSONArray(newArray);
 				results.put("class", newClassArray);
 			}else{
-				results.put("class", ext.getJSONObject("classes"));
+				results.put("class", ext.getJSONObject("classes"));//取固定值
 			}
 			results.put("list", listArray);
             if (filter) {
