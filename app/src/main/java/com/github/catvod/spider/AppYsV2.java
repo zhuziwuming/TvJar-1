@@ -245,7 +245,20 @@ public class AppYsV2 extends Spider {
                     JSONObject vObj = jsonArray.getJSONObject(i);
                     if (vObj.has("vod_id")) {
                         JSONObject v = new JSONObject();
-                        v.put("vod_id", vObj.getString("vod_id"));
+						String down_url = vObj.getString("vod_down_url");
+						String vid;
+						if(down_url.contains("$$$")){
+		                	down_url = down_url.split("$$$")[0];
+		                }
+						
+		                if(down_url.contains("ali")){
+							vid = "push://" + down_url;
+							//v.put("vod_id", "push://" + down_url);
+						} else {
+							vid = vObj.getString("vod_id");
+                            
+						}
+						v.put("vod_id", vid);
                         v.put("vod_name", vObj.getString("vod_name"));
                         v.put("vod_pic", vObj.getString("vod_pic"));
                         v.put("vod_remarks", vObj.getString("vod_remarks"));
