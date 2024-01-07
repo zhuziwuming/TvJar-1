@@ -115,7 +115,7 @@ public class WOGG extends Spider {
                 for (int i = 0; i < classarr.length(); i++) {  
                     JSONObject obj = classarr.getJSONObject(i);  
                     int typePid = obj.getInt("type_pid");  
-                    if (typePid == 0||typePid==null) {
+                    if (typePid == 0||!(obj.has("type_pid"))) {
                         newArray.add(obj);  
                     }  
                 }
