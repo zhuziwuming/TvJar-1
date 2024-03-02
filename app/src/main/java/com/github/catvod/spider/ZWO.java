@@ -24,8 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class ZWO extends Spider {
-	private PushAgent pushAgent;
+public class ZWO extends Ali {
     protected JSONObject ext = null;
     private static String api;
     @Override
@@ -87,18 +86,18 @@ public class ZWO extends Spider {
 		return dataObject.toString();	
     }
 
-    @Override
-    public String detailContent(List<String> ids) throws Exception {
-		try {
-            Pattern pattern = aliyun;
-            if (pattern.matcher(list.get(0)).find()) {
-                return pushAgent.detailContent(list);
-            }
-        } catch (Exception e) {
-            SpiderDebug.log(e);
-        }
-        return "";
-    }
+    // @Override
+    // public String detailContent(List<String> ids) throws Exception {
+		// try {
+            // Pattern pattern = aliyun;
+            // if (pattern.matcher(list.get(0)).find()) {
+                // return pushAgent.detailContent(list);
+            // }
+        // } catch (Exception e) {
+            // SpiderDebug.log(e);
+        // }
+        // return "";
+    // }
 	
     @Override
     public String homeContent(boolean filter) {
@@ -153,10 +152,10 @@ public class ZWO extends Spider {
         return dataObject.toString();        
     }
 
-    @Override
-    public String playerContent(String str, String str2, List<String> list) {
-        return pushAgent.playerContent(str, str2, list);
-    }
+    // @Override
+    // public String playerContent(String str, String str2, List<String> list) {
+        // return pushAgent.playerContent(str, str2, list);
+    // }
 
     @Override
     public String searchContent(String key, boolean quick) throws Exception {
