@@ -148,7 +148,7 @@ public class ZWO extends Ali {
     @Override
     public String playerContent(String str, String str2, List<String> list) {
 		if (str2 != null && !str2.isEmpty()) {  
-            return pushAgent.playerContent(str, str2, list);
+            return playerContent(str, str2, list);
 		}
 		return "";
     }

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class Ali extends Spider {
 
-    public static final Pattern pattern = Pattern.compile("(www.aliyundrive.com|www.alipan.com)/s/([^/]+)(/folder/([^/]+))?");
+    public static final Pattern pattern = Pattern.compile("www.(aliyundrive|alipan).com/s/([^/]+)(/folder/([^/]+))?");
 
     @Override
     public void init(Context context, String extend) {
@@ -80,8 +80,8 @@ public class Ali extends Spider {
 
     public static Object[] proxy(Map<String, String> params) throws Exception {
         String type = params.get("type");
-        if ("video".equals(type)) return AliYun.get().proxyVideo(params);
         if ("sub".equals(type)) return AliYun.get().proxySub(params);
+        if ("token".equals(type)) return AliYun.get().getToken();
         return null;
     }
 }
