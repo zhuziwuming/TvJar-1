@@ -145,13 +145,13 @@ public class ZWO extends Ali {
         return dataObject.toString();        
     }
 
-    @Override
-    public String playerContent(String str, String str2, List<String> list) {
-		if (str2 != null && !str2.isEmpty()) {  
-            return playerContent(str, str2, list);
-		}
-		return "";
-    }
+    // @Override
+    // public String playerContent(String str, String str2, List<String> list) {
+		// if (str2 != null && !str2.isEmpty()) {  
+            // return playerContent(str, str2, list);
+		// }
+		// return "";
+    // }
 
     @Override
     public String searchContent(String key, boolean quick) throws Exception {
