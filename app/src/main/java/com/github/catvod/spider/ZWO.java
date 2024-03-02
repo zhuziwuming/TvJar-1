@@ -84,13 +84,13 @@ public class ZWO extends Ali {
 		return dataObject.toString();	
     }
 
-    @Override
-    public String detailContent(List<String> ids) throws Exception {
-		if (ids != null && !ids.isEmpty()) { 
-		    return super.detailContent(ids);
-		}
-        return "";
-    }
+    // @Override
+    // public String detailContent(List<String> ids) throws Exception {
+		// if (ids != null && !ids.isEmpty()) { 
+		    // return super.detailContent(ids);
+		// }
+        // return "";
+    // }
 	
     @Override
     public String homeContent(boolean filter) {
