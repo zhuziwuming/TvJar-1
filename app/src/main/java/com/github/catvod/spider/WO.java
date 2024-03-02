@@ -24,7 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class WOGG extends Spider {
+public class WO extends Spider {
     protected JSONObject ext = null;
     private static String api;
     @Override
@@ -65,8 +65,8 @@ public class WOGG extends Spider {
 		        JSONObject vObj = jsonArray.getJSONObject(i);
 		        String down_url = vObj.getString("vod_down_url");
 		        String vod_remarks = vObj.getString("vod_remarks");
-		        if(down_url.contains("$$$")){
-		        	down_url = down_url.split("$$$")[0];
+		        if(down_url.contains("\\$\\$\\$")){
+		        	down_url = down_url.split("\\$\\$\\$")[0];
 		        }
 		        if(down_url.contains("aliyundrive.com")||down_url.contains("alipan.com")){
 		        	vObj.put("vod_id", "push://" + down_url);	
@@ -180,8 +180,8 @@ public class WOGG extends Spider {
 	    	    JSONObject vObj = jsonArray.getJSONObject(i);
 	    	    String down_url = vObj.getString("vod_down_url");
 	    	    String vod_remarks = vObj.getString("vod_remarks");
-	    	    if(down_url.contains("$$$")){
-	    	       	down_url = down_url.split("$$$")[0];
+	    	    if(down_url.contains("\\$\\$\\$")){
+	    	       	down_url = down_url.split("\\$\\$\\$")[0];
 	    	    }
 	    	    if(down_url.contains("ali")){
 	    	  	    vObj.put("vod_id", "push://" + down_url);	
