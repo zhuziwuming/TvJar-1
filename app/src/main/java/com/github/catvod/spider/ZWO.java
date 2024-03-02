@@ -84,18 +84,13 @@ public class ZWO extends Ali {
 		return dataObject.toString();	
     }
 
-    // @Override
-    // public String detailContent(List<String> ids) throws Exception {
-		// try {
-            // Pattern pattern = aliyun;
-            // if (pattern.matcher(list.get(0)).find()) {
-                // return pushAgent.detailContent(list);
-            // }
-        // } catch (Exception e) {
-            // SpiderDebug.log(e);
-        // }
-        // return "";
-    // }
+    @Override
+    public String detailContent(List<String> ids) throws Exception {
+		if (ids != null && !ids.isEmpty()) { 
+		    return super.detailContent(ids);
+		}
+        return "";
+    }
 	
     @Override
     public String homeContent(boolean filter) {
@@ -150,10 +145,13 @@ public class ZWO extends Ali {
         return dataObject.toString();        
     }
 
-    // @Override
-    // public String playerContent(String str, String str2, List<String> list) {
-        // return pushAgent.playerContent(str, str2, list);
-    // }
+    @Override
+    public String playerContent(String str, String str2, List<String> list) {
+		if (str2 != null && !str2.isEmpty()) {  
+            return pushAgent.playerContent(str, str2, list);
+		}
+		return "";
+    }
 
     @Override
     public String searchContent(String key, boolean quick) throws Exception {
