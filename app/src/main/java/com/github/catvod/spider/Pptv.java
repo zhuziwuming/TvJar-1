@@ -45,7 +45,7 @@ public class Pptv extends Spider {
 
     private Map<String, String> getHeader() {
         Map<String, String> header = new HashMap<>();
-        header.put("User-Agent", Util.CHROME);
+        header.put("User-Agent", Utils.CHROME);
         return header;
     }
 
