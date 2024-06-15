@@ -164,6 +164,11 @@ public class Result {
         this.danmaku = danmaku;
         return this;
     }
+	
+	public Result msg(String msg) {
+        this.msg = msg;
+        return this;
+    }
 
     public Result format(String format) {
         this.format = format;
