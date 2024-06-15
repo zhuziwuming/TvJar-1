@@ -84,6 +84,10 @@ public class Result {
     public static String string(Vod item) {
         return Result.get().vod(item).string();
     }
+	
+	public static String error(String msg) {
+        return Result.get().vod(Collections.emptyList()).msg(msg).string();
+    }
 
     public static Result get() {
         return new Result();
