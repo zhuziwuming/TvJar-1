@@ -9,7 +9,7 @@ import com.github.catvod.bean.Vod;
 import com.github.catvod.crawler.Spider;
 import com.github.catvod.crawler.SpiderDebug;
 import com.github.catvod.net.OkHttp;
-import com.github.catvod.utils.Util;
+import com.github.catvod.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -41,7 +41,7 @@ public class SC1080 extends Spider {
 
     private HashMap<String, String> getHeaders() {
         HashMap<String, String> header = new HashMap<>();
-        header.put("User-Agent", Util.CHROME);
+        header.put("User-Agent", Utils.CHROME);
         return header;
     }
 
