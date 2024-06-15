@@ -24,7 +24,7 @@ public class Bili extends Spider {
     protected JSONObject ext = null;
 
     @Override
-    public void init(Context context, String extend) {
+    public void init(Context context, String extend) throws Exception {
         super.init(context, extend);
         try {
             String content = OkHttpUtil.string(extend, null);
