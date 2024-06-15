@@ -48,7 +48,7 @@ public class Bili extends Spider {
     }
 
     @Override
-    public String homeContent(boolean filter) {
+    public String homeContent(boolean filter) throws Exception{
         JSONObject results = new JSONObject();
         try {
             results.put("class", ext.getJSONArray("classes"));
@@ -112,7 +112,7 @@ public class Bili extends Spider {
     }
 
     @Override
-    public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend) {
+    public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend) throws Exception{
         try {
             String url = "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=";
             if (extend != null && extend.size() > 0 && extend.containsKey("tid") && extend.get("tid").length() > 0) {
@@ -171,7 +171,7 @@ public class Bili extends Spider {
     }
 
     @Override
-    public String detailContent(List<String> ids) {
+    public String detailContent(List<String> ids) throws Exception {
         int i = 0;
         try {
             String str = ids.get(0);
@@ -234,7 +234,7 @@ public class Bili extends Spider {
     }
 
     @Override
-    public String playerContent(String str, String str2, List<String> list) {
+    public String playerContent(String str, String str2, List<String> list)  throws Exception{
         try {
             String[] split = str2.split("\\+");
             String str3 = split[0];
@@ -258,7 +258,7 @@ public class Bili extends Spider {
     }
 
     @Override
-    public String searchContent(String key, boolean quick) {
+    public String searchContent(String key, boolean quick)  throws Exception{
         try {
             JSONObject result = new JSONObject();
             String url = "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=" + URLEncoder.encode(key);
