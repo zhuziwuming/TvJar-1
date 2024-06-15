@@ -28,6 +28,8 @@ public class Result {
     private String format;
     @SerializedName("danmaku")
     private String danmaku;
+	@SerializedName("msg")
+    private String msg;
     @SerializedName("url")
     private Object url;
     @SerializedName("subs")
