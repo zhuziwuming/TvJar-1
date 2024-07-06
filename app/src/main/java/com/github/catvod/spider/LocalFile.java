@@ -119,7 +119,7 @@ public class LocalFile extends Spider {
         LocalFile.super.init(context);
     }
 
-    public String playerContent(String str, String str2, List<String> list) throws Exceptio {
+    public String playerContent(String str, String str2, List<String> list) throws Exception {
         try{
             JSONObject result = new JSONObject();
             result.put("parse", 0);
@@ -132,7 +132,7 @@ public class LocalFile extends Spider {
         return "";
     }
 
-    public String searchContent(String str, boolean z) throws Exceptio{
+    public String searchContent(String str, boolean z) throws Exception {
         try {
             return "";
         } catch (Exception e) {
