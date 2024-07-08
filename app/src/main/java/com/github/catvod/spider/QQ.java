@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;  
+import java.util.regex.Pattern; 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 
 import rxhttp.wrapper.annotations.NonNull;
 
@@ -220,22 +223,23 @@ public class QQ extends Spider {
 	@Override
     public String homeVideoContent() {
         try {
-            JSONObject jsonObject = new JSONObject(OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/")));
-			
+			String html = OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/"));
+			Pattern pattern = Pattern.compile("window\\.__INITIAL_STATE__\\s*=\\s*([\\s\\S]*?)<\\/script>", Pattern.DOTALL);  
+			Matcher matcher = pattern.matcher(htmlContent);  
+  
+        if (matcher.find()) { 
+		    String initialStateContent = matcher.group(1).trim();
+			JSONObject jsonObject = new JSONObject(initialStateContent);
 			// 逐层访问到目标数据  
 			JSONObject storeModulesData = jsonObject.getJSONObject("storeModulesData");  
 			JSONObject channelsModulesMap = storeModulesData.getJSONObject("channelsModulesMap");  
 			JSONObject choice = channelsModulesMap.getJSONObject("choice");  
 			JSONArray cardListData = choice.getJSONArray("cardListData");  
-	 
 				JSONObject firstCardListData = cardListData.getJSONObject(0); // 注意这里使用 getJSONObject 而不是索引+方括号  
-	
 				// 获取children_list  
 				JSONObject childrenList = firstCardListData.getJSONObject("children_list");  
-	
 				// 获取list  
 				JSONObject list = childrenList.getJSONObject("list");  
-	
 				// 最后获取cards  
 				JSONArray cards = list.getJSONArray("cards");
 				
@@ -254,6 +258,7 @@ public class QQ extends Spider {
                 jSONArray2.put(jSONObject2);
 
             }
+		}
             JSONObject jSONObject3 = new JSONObject();
             jSONObject3.put("list", jSONArray2);
             return jSONObject3.toString();
