@@ -227,9 +227,7 @@ public class QQ extends Spider {
 			JSONObject channelsModulesMap = storeModulesData.getJSONObject("channelsModulesMap");  
 			JSONObject choice = channelsModulesMap.getJSONObject("choice");  
 			JSONArray cardListData = choice.getJSONArray("cardListData");  
-	
-			// cardListData是一个JSONArray，我们需要访问第一个元素  
-			if (!cardListData.isEmpty()) {  
+	 
 				JSONObject firstCardListData = cardListData.getJSONObject(0); // 注意这里使用 getJSONObject 而不是索引+方括号  
 	
 				// 获取children_list  
@@ -240,7 +238,7 @@ public class QQ extends Spider {
 	
 				// 最后获取cards  
 				JSONArray cards = list.getJSONArray("cards");
-			}
+				
             JSONArray jSONArray2 = new JSONArray();
             for (int i = 0; i < cards.length(); i++) {
 				JSONObject Obj = cards.getJSONObject(i); // 获取JSONArray中的JSONObject  
