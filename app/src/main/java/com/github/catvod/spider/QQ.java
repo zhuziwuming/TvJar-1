@@ -223,10 +223,10 @@ public class QQ extends Spider {
 	@Override
     public String homeVideoContent() {
         try {
-			String html = OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/"));
+			String htmlContent = OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/"));
 			Pattern pattern = Pattern.compile("window\\.__INITIAL_STATE__\\s*=\\s*([\\s\\S]*?)<\\/script>", Pattern.DOTALL);  
 			Matcher matcher = pattern.matcher(htmlContent);  
-  
+			JSONArray jSONArray2 = new JSONArray();
         if (matcher.find()) { 
 		    String initialStateContent = matcher.group(1).trim();
 			JSONObject jsonObject = new JSONObject(initialStateContent);
@@ -243,7 +243,7 @@ public class QQ extends Spider {
 				// 最后获取cards  
 				JSONArray cards = list.getJSONArray("cards");
 				
-            JSONArray jSONArray2 = new JSONArray();
+            
             for (int i = 0; i < cards.length(); i++) {
 				JSONObject Obj = cards.getJSONObject(i); // 获取JSONArray中的JSONObject  
 				String title = Obj.getString("title"); 
