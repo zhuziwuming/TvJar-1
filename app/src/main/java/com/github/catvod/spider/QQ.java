@@ -302,7 +302,7 @@ public class QQ extends Spider {
     public String searchContent(String key, boolean quick)  throws Exception{
         try {
 			String searchapi = "https://v.qq.com/x/search/?q=" + key;
-			String html = OkHttpUtil.string(searchapi, getHeaders(searchapi))
+			String html = OkHttpUtil.string(searchapi, getHeaders(searchapi));
 			Document doc = Jsoup.parse(html);  
 			Elements items = doc.select("div.result_item_v");  
 			for (Element item : items) {
