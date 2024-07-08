@@ -202,7 +202,6 @@ public class QQ extends Spider {
     @Override
     public String homeContent(boolean filter) throws Exception{
         try {
-            Document doc = Jsoup.parse(OkHttpUtil.string("https://v.qq.com/channel/tv?listpage=1&channel=tv&sort=18&_all=1", getHeaders("https://v.qq.com/channel/tv?listpage=1&channel=tv&sort=18&_all=1")));
 			String clas = "[{\"type_id\":\"tv\",\"type_name\":\"电视剧\"},{\"type_id\":\"movie\",\"type_name\":\"电影\"},{\"type_id\":\"cartoon\",\"type_name\":\"动漫\"},{\"type_id\":\"child\",\"type_name\":\"少儿\"},{\"type_id\":\"variety\",\"type_name\":\"综艺\"},{\"type_id\":\"knowledge\",\"type_name\":\"知识\"},{\"type_id\":\"education\",\"type_name\":\"学堂\"},{\"type_id\":\"doco\",\"type_name\":\"纪录片\"}]";
             JSONArray jSONArray = new JSONArray(clas);
             JSONObject jSONObject2 = new JSONObject();
@@ -217,24 +216,45 @@ public class QQ extends Spider {
             return "";
         }
     }
-
+	
+	@Override
     public String homeVideoContent() {
         try {
-            JSONArray jSONArray = new JSONObject(OkHttpUtil.string("https://v.qq.com/api.php/app/index_video?token=", getHeaders("https://v.qq.com/api.php/app/index_video?token="))).getJSONArray("list");
+            JSONObject jSONObject = new JSONObject(OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/")));
+			
+			// 逐层访问到目标数据  
+			JSONObject storeModulesData = jsonObject.getJSONObject("storeModulesData");  
+			JSONObject channelsModulesMap = storeModulesData.getJSONObject("channelsModulesMap");  
+			JSONObject choice = channelsModulesMap.getJSONObject("choice");  
+			JSONArray cardListData = choice.getJSONArray("cardListData");  
+	
+			// cardListData是一个JSONArray，我们需要访问第一个元素  
+			if (!cardListData.isEmpty()) {  
+				JSONObject firstCardListData = cardListData.getJSONObject(0); // 注意这里使用 getJSONObject 而不是索引+方括号  
+	
+				// 获取children_list  
+				JSONObject childrenList = firstCardListData.getJSONObject("children_list");  
+	
+				// 获取list  
+				JSONObject list = childrenList.getJSONObject("list");  
+	
+				// 最后获取cards  
+				JSONArray cards = list.getJSONArray("cards");
+			}
             JSONArray jSONArray2 = new JSONArray();
-            for (int i = 0; i < jSONArray.length(); i++) {
-                JSONArray jSONArray3 = jSONArray.getJSONObject(i).getJSONArray("vlist");
-                int i2 = 0;
-                while (i2 < jSONArray3.length() && i2 < 6) {
-                    JSONObject jSONObject = jSONArray3.getJSONObject(i2);
-                    JSONObject jSONObject2 = new JSONObject();
-                    jSONObject2.put("vod_id", jSONObject.optString("vod_id"));
-                    jSONObject2.put("vod_name", jSONObject.optString("vod_name"));
-                    jSONObject2.put("vod_pic", jSONObject.optString("vod_pic"));
-                    jSONObject2.put("vod_remarks", jSONObject.optString("vod_remarks"));
-                    jSONArray2.put(jSONObject2);
-                    i2++;
-                }
+            for (int i = 0; i < cards.length(); i++) {
+				JSONObject Obj = cards.getJSONObject(i); // 获取JSONArray中的JSONObject  
+				String title = Obj.getString("title"); 
+				String picurl = Obj.getString("image_url_vertical");
+				String cid = Obj.getString("cid");
+				String remarks = Obj.getString("stitle_pc");
+				JSONObject jSONObject2 = new JSONObject();
+                jSONObject2.put("vod_id", cid);
+                jSONObject2.put("vod_name", title);
+                jSONObject2.put("vod_pic", picurl);
+                jSONObject2.put("vod_remarks", remarks);
+                jSONArray2.put(jSONObject2);
+
             }
             JSONObject jSONObject3 = new JSONObject();
             jSONObject3.put("list", jSONArray2);
