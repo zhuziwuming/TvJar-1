@@ -304,7 +304,8 @@ public class QQ extends Spider {
 			String searchapi = "https://v.qq.com/x/search/?q=" + key;
 			String html = OkHttpUtil.string(searchapi, getHeaders(searchapi));
 			Document doc = Jsoup.parse(html);  
-			Elements items = doc.select("div.result_item_v");  
+			Elements items = doc.select("div.result_item_v"); 
+			JSONArray jSONArray2 = new JSONArray();			
 			for (Element item : items) {
 								
 				// 检查是否包含特定的播放源  
@@ -331,7 +332,7 @@ public class QQ extends Spider {
 					if (!infos.isEmpty()) {  
 						vodRemarks = infos.first().text();  
 					}
-					JSONArray jSONArray2 = new JSONArray();
+					
 					JSONObject jSONObject2 = new JSONObject();
 					jSONObject2.put("vod_id", vodId);
 					jSONObject2.put("vod_name", vodName);
