@@ -203,45 +203,15 @@ public class QQ extends Spider {
     public String homeContent(boolean filter) throws Exception{
         try {
             Document doc = Jsoup.parse(OkHttpUtil.string("https://v.qq.com/channel/tv?listpage=1&channel=tv&sort=18&_all=1", getHeaders("https://v.qq.com/channel/tv?listpage=1&channel=tv&sort=18&_all=1")));
-            JSONArray jSONArray = new JSONArray();
-            Iterator<Element> it = doc.select(".nav_cell").iterator();
-            while (it.hasNext()) {
-                Element next = it.next();
-                JSONObject jSONObject = new JSONObject();
-                String Pd = next.select("a").attr("href");
-                if (!Pd.contains("/art") && !Pd.contains("feeds_hotspot") && !Pd.contains("wwe") && !Pd.contains("choice") && !Pd.contains("sports_new") && !Pd.contains("games") && !Pd.contains("lols11") && !Pd.contains("ent") && !Pd.contains("news") && !Pd.contains("fashion") && !Pd.contains("tech") && !Pd.contains("auto") && !Pd.contains("house") && !Pd.contains("finance") && !Pd.contains("astro") && !Pd.contains("nba") && !Pd.contains("fun") && !Pd.contains("baby") && !Pd.contains("music") && !Pd.contains("life") && !Pd.contains("travel") && Pd.contains("/channel/")) {
-                    jSONObject.put("type_name", next.select("a").text());
-                    jSONObject.put("type_id", Pd.split("/channel/")[1]);
-                    jSONArray.put(jSONObject);
-                }
-            }
-            String h = OkHttpUtil.string("https://v.qq.com/x/bu/pagesheet/list?_all=1&append=1&channel=choice", getHeaders("https://v.qq.com/x/bu/pagesheet/list?_all=1&append=1&channel=choice"));
+			String clas = "[{\"type_id\":\"tv\",\"type_name\":\"电视剧\"},{\"type_id\":\"movie\",\"type_name\":\"电影\"},{\"type_id\":\"cartoon\",\"type_name\":\"动漫\"},{\"type_id\":\"child\",\"type_name\":\"少儿\"},{\"type_id\":\"variety\",\"type_name\":\"综艺\"},{\"type_id\":\"knowledge\",\"type_name\":\"知识\"},{\"type_id\":\"education\",\"type_name\":\"学堂\"},{\"type_id\":\"doco\",\"type_name\":\"纪录片\"}]";
+            JSONArray jSONArray = new JSONArray(clas);
             JSONObject jSONObject2 = new JSONObject();
             if (filter) {
                 jSONObject2.put("filters", this.extjson);
             }
             jSONObject2.put("class", jSONArray);
-            try {
-                Elements listItem = Jsoup.parse(h).select(".list_item");
-                JSONArray jSONArray2 = new JSONArray();
-                for (int i = 0; i < listItem.size(); i++) {
-                    Element item = listItem.get(i);
-                    String title = item.select("a").attr("title");
-                    String pic = imgUrl("https://v.qq.com/x/bu/pagesheet/list?_all=1&append=1&channel=choice", item.select("img").attr("src"));
-                    String remark = item.select(".figure_caption").text();
-                    String vid = item.select("a").attr("data-float");
-                    JSONObject jSONObject3 = new JSONObject();
-                    jSONObject3.put("vod_id", vid);
-                    jSONObject3.put("vod_name", title);
-                    jSONObject3.put("vod_pic", pic);
-                    jSONObject3.put("vod_remarks", remark);
-                    jSONArray2.put(jSONObject3);
-                }
-                jSONObject2.put("list", jSONArray2);
-            } catch (Exception e) {
-                SpiderDebug.log(e);
-            }
-            return jSONObject2.toString(4);
+            
+            return jSONObject2.toString();
         } catch (Exception e2) {
             SpiderDebug.log(e2);
             return "";
