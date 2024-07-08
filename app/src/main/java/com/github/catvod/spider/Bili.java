@@ -234,7 +234,7 @@ public class Bili extends Spider {
     }
 
     @Override
-    public String playerContent(String str, String str2, List<String> list)  throws Exception{
+    public String playerContent(String str, String str2, List<String> list) throws Exception{
         try {
             String[] split = str2.split("\\+");
             String str3 = split[0];
