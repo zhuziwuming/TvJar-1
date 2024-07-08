@@ -220,7 +220,7 @@ public class QQ extends Spider {
 	@Override
     public String homeVideoContent() {
         try {
-            JSONObject jSONObject = new JSONObject(OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/")));
+            JSONObject jsonObject = new JSONObject(OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/")));
 			
 			// 逐层访问到目标数据  
 			JSONObject storeModulesData = jsonObject.getJSONObject("storeModulesData");  
