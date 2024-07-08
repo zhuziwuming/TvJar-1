@@ -7,6 +7,7 @@ import com.github.catvod.crawler.SpiderDebug;
 import com.github.catvod.utils.okhttp.OkHttpUtil;
 
 import java.net.URLEncoder;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -229,6 +230,7 @@ public class QQ extends Spider {
 			JSONArray jSONArray2 = new JSONArray();
         if (matcher.find()) { 
 		    String initialStateContent = matcher.group(1).trim();
+			initialStateContent = URLDecoder.decode(initialStateContent, "UTF-8");
 			JSONObject jsonObject = new JSONObject(initialStateContent);
 			// 逐层访问到目标数据  
 			JSONObject storeModulesData = jsonObject.getJSONObject("storeModulesData");  
