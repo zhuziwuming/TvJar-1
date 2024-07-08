@@ -301,18 +301,45 @@ public class QQ extends Spider {
     @Override
     public String searchContent(String key, boolean quick)  throws Exception{
         try {
-            String str2 = "http://node.video.qq.com/x/api/msearch?keyWord=" + key;
-            JSONArray jSONArray = new JSONObject(OkHttpUtil.string(str2, getHeaders(str2))).getJSONArray("uiData");
-            JSONArray jSONArray2 = new JSONArray();
-            for (int i = 0; i < jSONArray.length(); i++) {
-                JSONObject jSONObject = jSONArray.getJSONObject(i).getJSONArray("data").getJSONObject(0);
-                JSONObject jSONObject2 = new JSONObject();
-                jSONObject2.put("vod_id", jSONObject.optString("id"));
-                jSONObject2.put("vod_name", jSONObject.optString("title"));
-                jSONObject2.put("vod_pic", jSONObject.optString("posterPic"));
-                jSONObject2.put("vod_remarks", jSONObject.optString("publishDate"));
-                jSONArray2.put(jSONObject2);
-            }
+			String searchapi = "https://v.qq.com/x/search/?q=" + key;
+			String html = OkHttpUtil.string(searchapi, getHeaders(searchapi))
+			Document doc = Jsoup.parse(html);  
+			Elements items = doc.select("div.result_item_v");  
+			for (Element item : items) {
+								
+				// 检查是否包含特定的播放源  
+				Elements playsrcElements = item.select("div.result_source span._cur_playsrc");  
+				if (!playsrcElements.isEmpty() && "腾讯视频".equals(playsrcElements.first().text().trim())) {  
+					String vodId = item.attr("data-id");  
+					String vodName = null;  
+					String vodPic = null;  
+					String vodRemarks = null;  
+	
+					// 获取图片和名称  
+					Elements imgs = item.select("a.figure img.figure_pic");  
+					if (!imgs.isEmpty()) {  
+						vodName = imgs.first().attr("alt");  
+						String src = imgs.first().attr("src");  
+						if (src.startsWith("//")) {  
+							src = "https:" + src;  
+						}  
+						vodPic = src;  
+					}  
+	
+					// 获取备注信息  
+					Elements infos = item.select("a.figure span.figure_info");  
+					if (!infos.isEmpty()) {  
+						vodRemarks = infos.first().text();  
+					}
+					JSONArray jSONArray2 = new JSONArray();
+					JSONObject jSONObject2 = new JSONObject();
+					jSONObject2.put("vod_id", vodId);
+					jSONObject2.put("vod_name", vodName);
+					jSONObject2.put("vod_pic", vodPic);
+					jSONObject2.put("vod_remarks", vodRemarks);
+					jSONArray2.put(jSONObject2);				
+				}    				
+			}
             JSONObject jSONObject3 = new JSONObject();
             jSONObject3.put("list", jSONArray2);
             return jSONObject3.toString();
