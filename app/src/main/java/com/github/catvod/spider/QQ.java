@@ -53,7 +53,7 @@ public class QQ extends Spider {
         }
     }
 
-    public String categoryContent(String tid, String pg, boolean z, HashMap<String, String> hashMap) throws Exception {
+    public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> hashMap) throws Exception {
         String str3;
         try {
             String str4 = "https://v.qq.com/x/bu/pagesheet/list?_all=1&append=1&channel=" + tid + "&listpage=1&offset=" + ((Integer.parseInt(pg) - 1) * 21) + "&pagesize=21&sort=18";
@@ -87,7 +87,7 @@ public class QQ extends Spider {
                     jSONObject2.put("vod_remarks", str3);
                     jSONArray.put(jSONObject2);
                 }
-                jSONObject.put("page", str2);
+                jSONObject.put("page", pg);
                 jSONObject.put("pagecount", Integer.MAX_VALUE);
                 jSONObject.put("limit", 90);
                 jSONObject.put("total", Integer.MAX_VALUE);
