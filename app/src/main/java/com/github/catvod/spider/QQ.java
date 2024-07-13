@@ -221,54 +221,57 @@ public class QQ extends Spider {
         }
     }
 	
-	// @Override
-    // public String homeVideoContent() {
-        // try {
-			// String htmlContent = OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/"));
-			// Pattern pattern = Pattern.compile("window\\.__INITIAL_STATE__\\s*=\\s*([\\s\\S]*?)<\\/script>", Pattern.DOTALL);  
-			// Matcher matcher = pattern.matcher(htmlContent);  
-			// JSONArray jSONArray2 = new JSONArray();
-        // if (matcher.find()) { 
-		    // String initialStateContent = matcher.group(1).trim();
-			// initialStateContent = URLDecoder.decode(initialStateContent, "UTF-8");
-			// JSONObject jsonObject = new JSONObject(initialStateContent);
-			// // 逐层访问到目标数据  
-			// JSONObject storeModulesData = jsonObject.getJSONObject("storeModulesData");  
-			// JSONObject channelsModulesMap = storeModulesData.getJSONObject("channelsModulesMap");  
-			// JSONObject choice = channelsModulesMap.getJSONObject("choice");  
-			// JSONArray cardListData = choice.getJSONArray("cardListData");  
-				// JSONObject firstCardListData = cardListData.getJSONObject(0); // 注意这里使用 getJSONObject 而不是索引+方括号  
-				// // 获取children_list  
-				// JSONObject childrenList = firstCardListData.getJSONObject("children_list");  
-				// // 获取list  
-				// JSONObject list = childrenList.getJSONObject("list");  
-				// // 最后获取cards  
-				// JSONArray cards = list.getJSONArray("cards");
+	@Override
+    public String homeVideoContent() {
+        try {
+			String htmlContent = OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/"));
+			Pattern pattern = Pattern.compile("window\\.__INITIAL_STATE__\\s*=\\s*([\\s\\S]*?)<\\/script>", Pattern.DOTALL);  
+			Matcher matcher = pattern.matcher(htmlContent);  
+			JSONArray jSONArray2 = new JSONArray();
+        if (matcher.find()) {			
+		    String initialStateContent = matcher.group(1).trim();
+			Toast.makeText(this, initialStateContent, Toast.LENGTH_SHORT).show();
+			initialStateContent = URLDecoder.decode(initialStateContent, "UTF-8");
+			JSONObject jsonObject = new JSONObject(initialStateContent);
+			// 逐层访问到目标数据  
+			JSONObject storeModulesData = jsonObject.getJSONObject("storeModulesData");  
+			JSONObject channelsModulesMap = storeModulesData.getJSONObject("channelsModulesMap");  
+			JSONObject choice = channelsModulesMap.getJSONObject("choice");  
+			JSONArray cardListData = choice.getJSONArray("cardListData");  
+				JSONObject firstCardListData = cardListData.getJSONObject(0); // 注意这里使用 getJSONObject 而不是索引+方括号  
+				// 获取children_list  
+				JSONObject childrenList = firstCardListData.getJSONObject("children_list");  
+				// 获取list  
+				JSONObject list = childrenList.getJSONObject("list");  
+				// 最后获取cards  
+				JSONArray cards = list.getJSONArray("cards");
 				
             
-            // for (int i = 0; i < cards.length(); i++) {
-				// JSONObject Obj = cards.getJSONObject(i); // 获取JSONArray中的JSONObject  
-				// String title = Obj.getString("title"); 
-				// String picurl = Obj.getString("image_url_vertical");
-				// String cid = Obj.getString("cid");
-				// String remarks = Obj.getString("stitle_pc");
-				// JSONObject jSONObject2 = new JSONObject();
-                // jSONObject2.put("vod_id", cid);
-                // jSONObject2.put("vod_name", title);
-                // jSONObject2.put("vod_pic", picurl);
-                // jSONObject2.put("vod_remarks", remarks);
-                // jSONArray2.put(jSONObject2);
+            for (int i = 0; i < cards.length(); i++) {
+				JSONObject Obj = cards.getJSONObject(i); // 获取JSONArray中的JSONObject  
+				String title = Obj.getString("title"); 
+				String picurl = Obj.getString("image_url_vertical");
+				String cid = Obj.getString("cid");
+				String remarks = Obj.getString("stitle_pc");
+				JSONObject jSONObject2 = new JSONObject();
+                jSONObject2.put("vod_id", cid);
+                jSONObject2.put("vod_name", title);
+                jSONObject2.put("vod_pic", picurl);
+                jSONObject2.put("vod_remarks", remarks);
+                jSONArray2.put(jSONObject2);
 
-            // }
-		// }
-            // JSONObject jSONObject3 = new JSONObject();
-            // jSONObject3.put("list", jSONArray2);
-            // return jSONObject3.toString();
-        // } catch (Exception e) {
-            // SpiderDebug.log(e);
-            // return "";
-        // }
-    // }
+            }
+		} else{
+			Toast.makeText(this, "没有匹配到!", Toast.LENGTH_SHORT).show();
+		}
+            JSONObject jSONObject3 = new JSONObject();
+            jSONObject3.put("list", jSONArray2);
+            return jSONObject3.toString();
+        } catch (Exception e) {
+            SpiderDebug.log(e);
+            return "";
+        }
+    }
 
     public String join(@NonNull CharSequence charSequence, @NonNull Iterable iterable) {
         Iterator it = iterable.iterator();
