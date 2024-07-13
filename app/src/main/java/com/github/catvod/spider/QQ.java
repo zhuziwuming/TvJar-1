@@ -264,8 +264,7 @@ public class QQ extends Spider {
 		} catch (Exception e) {
 			SpiderDebug.log(e);
 			return "";
-		}
-		return "";		
+		}		
     }
 
     public String join(@NonNull CharSequence charSequence, @NonNull Iterable iterable) {
