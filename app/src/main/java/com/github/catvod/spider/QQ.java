@@ -21,7 +21,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import android.widget.Toast;
 
 import rxhttp.wrapper.annotations.NonNull;
 
@@ -225,55 +224,50 @@ public class QQ extends Spider {
 	
 	@Override
     public String homeVideoContent() {
-        try {
 			String htmlContent = OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/"));
 			Pattern pattern = Pattern.compile("window\\.__INITIAL_STATE__\\s*=\\s*([\\s\\S]*?)<\\/script>", Pattern.DOTALL);  
 			Matcher matcher = pattern.matcher(htmlContent);  
 			JSONArray jSONArray2 = new JSONArray();
-        if (matcher.find()) {			
-		    String initialStateContent = matcher.group(1).trim();
-			Toast.makeText(mContext, initialStateContent, Toast.LENGTH_SHORT).show();
-			initialStateContent = URLDecoder.decode(initialStateContent, "UTF-8");
-			JSONObject jsonObject = new JSONObject(initialStateContent);
-			// 逐层访问到目标数据  
-			JSONObject storeModulesData = jsonObject.getJSONObject("storeModulesData");  
-			JSONObject channelsModulesMap = storeModulesData.getJSONObject("channelsModulesMap");  
-			JSONObject choice = channelsModulesMap.getJSONObject("choice");  
-			JSONArray cardListData = choice.getJSONArray("cardListData");  
-				JSONObject firstCardListData = cardListData.getJSONObject(0); // 注意这里使用 getJSONObject 而不是索引+方括号  
-				// 获取children_list  
-				JSONObject childrenList = firstCardListData.getJSONObject("children_list");  
-				// 获取list  
-				JSONObject list = childrenList.getJSONObject("list");  
-				// 最后获取cards  
-				JSONArray cards = list.getJSONArray("cards");
+        if (matcher.find()) {
+			try {
+				String initialStateContent = matcher.group(1).trim();
+				//initialStateContent = URLDecoder.decode(initialStateContent, "UTF-8");
+				JSONObject jsonObject = new JSONObject(initialStateContent);
+				// 逐层访问到目标数据  
+				JSONObject storeModulesData = jsonObject.getJSONObject("storeModulesData");  
+				JSONObject channelsModulesMap = storeModulesData.getJSONObject("channelsModulesMap");  
+				JSONObject choice = channelsModulesMap.getJSONObject("choice");  
+				JSONArray cardListData = choice.getJSONArray("cardListData");  
+					JSONObject firstCardListData = cardListData.getJSONObject(0); // 注意这里使用 getJSONObject 而不是索引+方括号  
+					// 获取children_list  
+					JSONObject childrenList = firstCardListData.getJSONObject("children_list");  
+					// 获取list  
+					JSONObject list = childrenList.getJSONObject("list");  
+					// 最后获取cards  
+					JSONArray cards = list.getJSONArray("cards");
+					
 				
-            
-            for (int i = 0; i < cards.length(); i++) {
-				JSONObject Obj = cards.getJSONObject(i); // 获取JSONArray中的JSONObject
-				JSONObject params = Obj.getJSONObject("params"); 
-				String title = params.getString("title"); 
-				String picurl = params.getString("image_url_vertical");
-				String cid = params.getString("cid");
-				String remarks = params.getString("stitle_pc");
-				JSONObject jSONObject2 = new JSONObject();
-                jSONObject2.put("vod_id", cid);
-                jSONObject2.put("vod_name", title);
-                jSONObject2.put("vod_pic", picurl);
-                jSONObject2.put("vod_remarks", remarks);
-                jSONArray2.put(jSONObject2);
-
-            }
-		} else{
-			Toast.makeText(mContext, "没有匹配到!", Toast.LENGTH_SHORT).show();
+				for (int i = 0; i < cards.length(); i++) {
+					JSONObject params = cards.getJSONObject(i).getJSONObject("params");; // 获取JSONArray中的JSONObject
+					String title = params.getString("title"); 
+					String picurl = params.getString("image_url_vertical");
+					String cid = params.getString("cid");
+					String remarks = params.getString("stitle_pc");
+					JSONObject jSONObject2 = new JSONObject();
+					jSONObject2.put("vod_id", cid);
+					jSONObject2.put("vod_name", title);
+					jSONObject2.put("vod_pic", picurl);
+					jSONObject2.put("vod_remarks", remarks);
+					jSONArray2.put(jSONObject2);
+				}
+			} catch (Exception e) {
+				SpiderDebug.log(e);
+				return "";
+			}
 		}
             JSONObject jSONObject3 = new JSONObject();
             jSONObject3.put("list", jSONArray2);
-            return jSONObject3.toString();
-        } catch (Exception e) {
-            SpiderDebug.log(e);
-            return "";
-        }
+            return jSONObject3.toString();        
     }
 
     public String join(@NonNull CharSequence charSequence, @NonNull Iterable iterable) {
