@@ -250,11 +250,12 @@ public class QQ extends Spider {
 				
             
             for (int i = 0; i < cards.length(); i++) {
-				JSONObject Obj = cards.getJSONObject(i); // 获取JSONArray中的JSONObject  
-				String title = Obj.getString("title"); 
-				String picurl = Obj.getString("image_url_vertical");
-				String cid = Obj.getString("cid");
-				String remarks = Obj.getString("stitle_pc");
+				JSONObject Obj = cards.getJSONObject(i); // 获取JSONArray中的JSONObject
+				JSONObject params = Obj.getJSONObject("params"); 
+				String title = params.getString("title"); 
+				String picurl = params.getString("image_url_vertical");
+				String cid = params.getString("cid");
+				String remarks = params.getString("stitle_pc");
 				JSONObject jSONObject2 = new JSONObject();
                 jSONObject2.put("vod_id", cid);
                 jSONObject2.put("vod_name", title);
