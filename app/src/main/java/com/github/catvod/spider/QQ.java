@@ -222,6 +222,7 @@ public class QQ extends Spider {
 				JSONArray listArray = new JSONArray();
 				if (matcher.find()) {
 					String initialStateContent = matcher.group(1).trim();
+					Toast.makeText(mContext, initialStateContent, Toast.LENGTH_SHORT).show();
 					//initialStateContent = URLDecoder.decode(initialStateContent, "UTF-8");
 					JSONObject jsonObject1 = new JSONObject(initialStateContent);
 					// 逐层访问到目标数据  
@@ -249,10 +250,13 @@ public class QQ extends Spider {
 						jSONObject2.put("vod_remarks", remarks);
 						listArray.put(jSONObject2);
 					}
+				}else{
+					Toast.makeText(mContext, "没有匹配到", Toast.LENGTH_SHORT).show();
 				}
 					jSONObject.put("list", listArray);
 			} catch (Exception e) {
 				SpiderDebug.log(e);
+				Toast.makeText(mContext, "json异常", Toast.LENGTH_SHORT).show();
 			}
             return jSONObject.toString();
         } catch (Exception e2) {
