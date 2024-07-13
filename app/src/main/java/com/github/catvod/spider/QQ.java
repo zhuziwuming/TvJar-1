@@ -224,12 +224,12 @@ public class QQ extends Spider {
 	
 	@Override
     public String homeVideoContent() {
+		try {
 			String htmlContent = OkHttpUtil.string("https://v.qq.com/", getHeaders("https://v.qq.com/"));
 			Pattern pattern = Pattern.compile("window\\.__INITIAL_STATE__\\s*=\\s*([\\s\\S]*?)<\\/script>", Pattern.DOTALL);  
 			Matcher matcher = pattern.matcher(htmlContent);  
 			JSONArray jSONArray2 = new JSONArray();
-        if (matcher.find()) {
-			try {
+        	if (matcher.find()) {
 				String initialStateContent = matcher.group(1).trim();
 				//initialStateContent = URLDecoder.decode(initialStateContent, "UTF-8");
 				JSONObject jsonObject = new JSONObject(initialStateContent);
@@ -258,14 +258,15 @@ public class QQ extends Spider {
 					jSONObject2.put("vod_remarks", remarks);
 					jSONArray2.put(jSONObject2);
 				}
-			} catch (Exception e) {
-				SpiderDebug.log(e);
-				return "";
 			}
-		}
-            JSONObject jSONObject3 = new JSONObject();
-            jSONObject3.put("list", jSONArray2);
-            return jSONObject3.toString();        
+			JSONObject jSONObject3 = new JSONObject();
+			jSONObject3.put("list", jSONArray2);
+			return jSONObject3.toString();
+		} catch (Exception e) {
+			SpiderDebug.log(e);
+			return "";
+		}   
+                
     }
 
     public String join(@NonNull CharSequence charSequence, @NonNull Iterable iterable) {
