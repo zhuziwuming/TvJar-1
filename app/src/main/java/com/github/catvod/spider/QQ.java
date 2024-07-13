@@ -245,8 +245,6 @@ public class QQ extends Spider {
 					JSONObject list = childrenList.getJSONObject("list");  
 					// 最后获取cards  
 					JSONArray cards = list.getJSONArray("cards");
-					
-				
 				for (int i = 0; i < cards.length(); i++) {
 					JSONObject params = cards.getJSONObject(i).getJSONObject("params");; // 获取JSONArray中的JSONObject
 					String title = params.getString("title"); 
