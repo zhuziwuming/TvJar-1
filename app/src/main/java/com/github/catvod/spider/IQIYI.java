@@ -285,7 +285,7 @@ public class IQIYI extends Spider {
 			String jx = "http://110.40.45.213:9090/iqiyi666/?type=1&key=iqyi3&url=";
 			String json = OkHttpUtil.string(jx + str2, getHeaders(str2));
 			
-			JSONObject jsonObject = new JSONObject(jsonResponse);  
+			JSONObject jsonObject = new JSONObject(json);  
 			String playUrl = jsonObject.optString("url");
 			if(playUrl == null|| playUrl.isEmpty()){
 				parse = 1;
