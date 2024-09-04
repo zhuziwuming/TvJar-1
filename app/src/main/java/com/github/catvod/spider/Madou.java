@@ -36,7 +36,7 @@ public class Madou extends Spider {
     protected JSONObject ext = null;
     private static String api;
     @Override
-    public void init(Context context, String extend) {
+    public void init(Context context, String extend) throws Exception {
 		super.init(context, extend);		
         api = extend;
     }
@@ -49,7 +49,7 @@ public class Madou extends Spider {
     }
 
     @Override
-    public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend) {
+    public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend)  throws Exception{
 		JSONObject dataObject = null;
 		String html ="";
 		String url = api + tid;
@@ -106,7 +106,7 @@ public class Madou extends Spider {
 	}
 
     @Override
-    public String detailContent(List<String> ids) {
+    public String detailContent(List<String> ids)  throws Exception{
 		String id = ids.get(0);
 		JSONObject dataObject = null;
 		try {
@@ -142,7 +142,7 @@ public class Madou extends Spider {
     }    
 	
     @Override
-    public String homeContent(boolean filter) {
+    public String homeContent(boolean filter)  throws Exception{
         JSONObject results = new JSONObject();
         try {
             String data = OkHttpUtil.string(api, Headers()); 
@@ -202,7 +202,7 @@ public class Madou extends Spider {
     }
 
     @Override
-    public String homeVideoContent() {
+    public String homeVideoContent()  throws Exception{
         JSONObject list = new JSONObject();
 		String url = api;
 		String data ="";
@@ -219,7 +219,7 @@ public class Madou extends Spider {
     }
 
     @Override
-    public String playerContent(String str, String str2, List<String> list) {
+    public String playerContent(String str, String str2, List<String> list)  throws Exception{
         JSONObject result = new JSONObject();
         try {
             result.put("parse", 1);
@@ -233,7 +233,7 @@ public class Madou extends Spider {
     }
 
     @Override
-    public String searchContent(String wd, boolean filter) {
+    public String searchContent(String wd, boolean filter)  throws Exception{
 		String url = "https://api.xinlangapi.com/xinlangapi.php/provide/vod/from/xlm3u8/?ac=&wd=" + wd;
 		String data ="";
 		JSONObject dataObject = null;
