@@ -281,10 +281,23 @@ public class IQIYI extends Spider {
     public String playerContent(String str, String str2, List<String> list) throws Exception{
         try {
             JSONObject jSONObject = new JSONObject();
-            try {
-                jSONObject.put("parse", 1);
-                jSONObject.put("jx", "1");
-                jSONObject.put("url", str2);
+			int parse = 0;
+			String jx = "http://110.40.45.213:9090/iqiyi666/?type=1&key=iqyi3&url=";
+			String json = OkHttpUtil.string(jx + str2, getHeaders(str2));
+			
+			JSONObject jsonObject = new JSONObject(jsonResponse);  
+			String playUrl = jsonObject.optString("url");
+			if(playUrl == null|| playUrl.isEmpty()){
+				parse = 1;
+				playUrl = str2;
+			}
+			
+            try {				
+                jSONObject.put("parse", parse);
+                jSONObject.put("url", playUrl);
+				if(parse == 1){
+					jSONObject.put("jx", "1");
+				}
                 return jSONObject.toString();
             } catch (Exception e) {
                 SpiderDebug.log(e);
