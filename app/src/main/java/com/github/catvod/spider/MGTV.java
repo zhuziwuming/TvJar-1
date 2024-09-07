@@ -297,7 +297,7 @@ public class MGTV extends Spider {
 				String type = contents.getJSONObject(i).getString("type");
 				if ("media".equals(type)){
 					JSONArray dataX = contents.getJSONObject(i).getJSONArray("data");
-					JSONObject dataItem = data.getJSONObject(0);  
+					JSONObject dataItem = dataX.getJSONObject(0);  
 					if ("imgo".equals(dataItem.getString("source"))) { 
 						String title = dataItem.getString("title");
 						title = title.replace("<B>", "").replace("</B>", "");
