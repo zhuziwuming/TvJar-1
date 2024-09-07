@@ -288,7 +288,7 @@ public class MGTV extends Spider {
 	@Override
     public String searchContent(String str, boolean quick) throws Exception{
         try {
-        String url = "https://mobileso.bz.mgtv.com/pc/search/v2?allowedRC=1&q=" + str + "&pc=10&pn=1&sort=0&ty=0&du=0&pt=0&corr=1&abroad=0&_support=10000000000000000";
+        String url = "https://mobileso.bz.mgtv.com/msite/search/v2?allowedRC=1&q=" + str + "&pc=10&pn=1&sort=0&ty=0&du=0&pt=0&corr=1&abroad=0&_support=10000000000000000";
         String json = OkHttpUtil.string(url, getHeaders(url));
         JSONObject data = new JSONObject(json).getJSONObject("data");
         JSONArray contents = data.getJSONArray("contents");
