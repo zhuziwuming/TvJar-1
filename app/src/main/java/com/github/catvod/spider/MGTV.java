@@ -297,36 +297,27 @@ public class MGTV extends Spider {
 				String type = contents.getJSONObject(i).getString("type");
 				if ("media".equals(type)){
 					JSONArray dataX = contents.getJSONObject(i).getJSONArray("data");
-					if ("imgo".equals(dataX.getJSONObject(0).getString("source"))) { 
-						String title = dataX.getJSONObject(0).getString("title");
-						String pic = dataX.getJSONObject(0).getString("img");
-						JSONArray descs = dataX.getJSONObject(0).getJSONArray("descs");
-						
-						String htmlUrl = dataX.getJSONObject(0).getString("url"); 
+					JSONObject dataItem = data.getJSONObject(0);  
+					if ("imgo".equals(dataItem.getString("source"))) { 
+						String title = dataItem.getString("title");
+						title = title.replace("<B>", "").replace("</B>", "");
+						String pic = dataItem.getString("img");
+
+						String htmlUrl = dataItem.getString("url"); 
 						int lastSlashIndex = htmlUrl.lastIndexOf('/');   
 						int htmlIndex = htmlUrl.indexOf(".html");
 						String vodId = htmlUrl.substring(lastSlashIndex + 1, htmlIndex);
 						String vod_type = "";
-						String year = "";
-						String daoyan = "";
-						String actors = "";
+						
+						JSONArray descs = dataItem.getJSONArray("descs");
 						for (int j = 0; j < descs.length(); j++) { // 使用索引来遍历 JSONArray  
 							String item2 = descs.getString(j);  
 							if (item2.contains("类型")) {  
 								String[] parts = item2.replace("类型: ", "").split("/");  
 								if (parts.length > 0) {  
 									vod_type = parts[0].trim();  
-								}  
-								if (parts.length > 2) {  
-									year = parts[2].trim();  
-								}  
-							}  
-							if (item2.contains("导演")) {  
-								daoyan = item2.replace("导演: ", "").trim();  
-							}  
-							if (item2.contains("主演")) {  
-								actors = item2.replace("主演: ", "").trim(); // 单独存储主演信息  
-							}  
+								}    
+							} 
 						}
 						JSONObject item = new JSONObject();
 						item.put("vod_id", vodId);
