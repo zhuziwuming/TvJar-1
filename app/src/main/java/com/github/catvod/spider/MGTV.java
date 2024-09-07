@@ -288,33 +288,57 @@ public class MGTV extends Spider {
 	@Override
     public String searchContent(String str, boolean quick) throws Exception{
         try {
-            String url = "https://mobileso.bz.mgtv.com/pc/search/v1?allowedRC=1&q=" + str + "&pn=1&pc=10&uid=&corr=1&_support=10000000";
-            String json = OkHttpUtil.string(url, getHeaders(url));
-            JSONObject data = new JSONObject(json).getJSONObject("data");
-            JSONArray contents = data.getJSONArray("contents");
-            JSONArray items = new JSONArray();
-            for (int i = 0; i < contents.length(); i++) {
-                JSONObject jSONObject = contents.getJSONObject(i).getJSONObject("data");
-                if (!jSONObject.has("sourceList")) {
-                    continue;
-                }
-                JSONArray sourceList = jSONObject.getJSONArray("sourceList");
-                String vodUrl = sourceList.getJSONObject(0).getString("url");
-                String vodId = sourceList.getJSONObject(0).getString("vid");
-                String pic = jSONObject.optString("pic");
-                JSONObject item = new JSONObject();
-                item.put("vod_id", vodId);
-                item.put("vod_name", jSONObject.optString("title"));
-                item.put("vod_pic", pic);
-                item.put("vod_remarks", jSONObject.optString("playTime"));
-                items.put(item);
-            }
-            JSONObject result = new JSONObject();
-            result.put("list", items);
-            return result.toString();
-        } catch (Exception e) {
-            SpiderDebug.log(e);
-            return "";
-        }
-    }
+        String url = "https://mobileso.bz.mgtv.com/pc/search/v2?allowedRC=1&q=" + str + "&pn=1&pc=10&uid=&corr=1&_support=10000000";
+        String json = OkHttpUtil.string(url, getHeaders(url));
+        JSONObject data = new JSONObject(json).getJSONObject("data");
+        JSONArray contents = data.getJSONArray("contents");
+        JSONArray items = new JSONArray();
+			for (int i = 0; i < contents.length(); i++) {                
+				String type = contents.getJSONObject(i).getString("type");
+				if ("media".equals(type)){
+					JSONArray dataX = contents.getJSONObject(i).getJSONArray("data");
+					if ("imgo".equals(dataX.getJSONObject(0).getString("source"))) { 
+						String title = dataX.getJSONObject(0).getString("title");
+						String pic = dataX.getJSONObject(0).getString("img");
+						JSONArray descs = dataX.getJSONObject(0).getJSONArray("descs");
+						
+						String htmlUrl = dataX.getJSONObject(0).getString("url"); 
+						int lastSlashIndex = htmlUrl.lastIndexOf('/');   
+						int htmlIndex = htmlUrl.indexOf(".html");
+						String vodId = htmlUrl.substring(lastSlashIndex + 1, htmlIndex);
+						for (int j = 0; j < descs.length(); j++) { // 使用索引来遍历 JSONArray  
+							String item2 = descs.getString(j);  
+							if (item2.contains("类型")) {  
+								String[] parts = item2.replace("类型: ", "").split("/");  
+								if (parts.length > 0) {  
+									vod_type = parts[0].trim();  
+								}  
+								if (parts.length > 2) {  
+									year = parts[2].trim();  
+								}  
+							}  
+							if (item2.contains("导演")) {  
+								daoyan = item2.replace("导演: ", "").trim();  
+							}  
+							if (item2.contains("主演")) {  
+								actors = item2.replace("主演: ", "").trim(); // 单独存储主演信息  
+							}  
+						}
+						JSONObject item = new JSONObject();
+						item.put("vod_id", vodId);
+						item.put("vod_name", title);
+						item.put("vod_pic", pic);
+						item.put("vod_remarks", vod_type);
+						items.put(item);						
+					}
+				}
+			}	
+			JSONObject result = new JSONObject();
+			result.put("list", items);
+			return result.toString();
+		} catch (Exception e) {
+			SpiderDebug.log(e);
+			return "";
+		}
+	}
 }
