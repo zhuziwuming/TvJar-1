@@ -306,6 +306,10 @@ public class MGTV extends Spider {
 						int lastSlashIndex = htmlUrl.lastIndexOf('/');   
 						int htmlIndex = htmlUrl.indexOf(".html");
 						String vodId = htmlUrl.substring(lastSlashIndex + 1, htmlIndex);
+						String vod_type = "";
+						String year = "";
+						String daoyan = "";
+						String actors = "";
 						for (int j = 0; j < descs.length(); j++) { // 使用索引来遍历 JSONArray  
 							String item2 = descs.getString(j);  
 							if (item2.contains("类型")) {  
