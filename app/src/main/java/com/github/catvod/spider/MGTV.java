@@ -288,7 +288,7 @@ public class MGTV extends Spider {
 	@Override
     public String searchContent(String str, boolean quick) throws Exception{
         try {
-        String url = "https://mobileso.bz.mgtv.com/msite/search/v2?allowedRC=1&q=" + str + "&pc=10&pn=1&sort=0&ty=0&du=0&pt=0&corr=1&abroad=0&_support=10000000000000000";
+        String url = "https://mobileso.bz.mgtv.com/msite/search/v2?allowedRC=1&q=" + str + "&pc=10";
         String json = OkHttpUtil.string(url, getHeaders(url));
         JSONObject data = new JSONObject(json).getJSONObject("data");
         JSONArray contents = data.getJSONArray("contents");
@@ -299,8 +299,8 @@ public class MGTV extends Spider {
 					JSONArray dataX = contents.getJSONObject(i).getJSONArray("data");
 					JSONObject dataItem = dataX.getJSONObject(0);  
 					if ("imgo".equals(dataItem.getString("source"))) { 
-						String title = dataItem.getString("title");
-						title = title.replace("<B>", "").replace("</B>", "");
+						String title = dataItem.getString("title").replace("<B>", "").replace("</B>", "");
+
 						String pic = dataItem.getString("img");
 
 						String htmlUrl = dataItem.getString("url"); 
@@ -309,7 +309,7 @@ public class MGTV extends Spider {
 						String vodId = htmlUrl.substring(lastSlashIndex + 1, htmlIndex);
 						String vod_type = "";
 						
-						JSONArray descs = dataItem.getJSONArray("descs");
+						JSONArray descs = dataItem.getJSONArray("desc");
 						for (int j = 0; j < descs.length(); j++) { // 使用索引来遍历 JSONArray  
 							String item2 = descs.getString(j);  
 							if (item2.contains("类型")) {  
